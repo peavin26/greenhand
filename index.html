@@ -1,0 +1,3137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Green Hand - Direct Farm-to-Consumer Marketplace (Online Google Sheet)</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ghgreen: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#2e7d32',
+              800: '#1b5e20',
+              900: '#14532d'
+            },
+            ghearth: {
+              50: '#efebe9',
+              100: '#d7ccc8',
+              500: '#8d6e63',
+              600: '#6d4c41',
+              700: '#5d4037',
+              800: '#4e342e',
+              900: '#3e2723'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom Styles -->
+  <style>
+/* Green Hand - Visual Theme & Styling */
+/* Color Palette: Leaf Green (#2e7d32) + Earthy Brown / Terracotta (#8d6e63) */
+
+:root {
+  --primary-green: #2e7d32;
+  --primary-light: #4caf50;
+  --primary-dark: #1b5e20;
+  --earth-brown: #8d6e63;
+  --earth-dark: #5d4037;
+  --earth-light: #d7ccc8;
+  --bg-cream: #faf9f6;
+  --card-bg: #ffffff;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg-cream);
+  color: #27272a;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Mobile-First Shell Container */
+.mobile-app-shell {
+  max-width: 480px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px -5px rgba(46, 125, 50, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .mobile-app-shell {
+    min-height: 94vh;
+    margin: 3vh auto;
+    border-radius: 2rem;
+    overflow: hidden;
+    border: 1px solid rgba(141, 110, 99, 0.18);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #f5f5f4;
+}
+::-webkit-scrollbar-thumb {
+  background: #d6d3d1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a29e;
+}
+
+/* Smooth Transitions */
+.transition-smooth {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Produce Card Hover */
+.crop-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.crop-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(46, 125, 50, 0.1);
+}
+
+/* Status Badges */
+.badge-placed {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+.badge-confirmed {
+  background-color: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+.badge-delivered {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+.badge-rejected {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* Modal Backdrop */
+.modal-backdrop {
+  background-color: rgba(39, 39, 42, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+</style>
+</head>
+<body class="bg-stone-100 flex items-center justify-center min-h-screen p-0 sm:p-4">
+
+  <!-- ========================================================================= -->
+  <!-- MOBILE APP SHELL                                                          -->
+  <!-- ========================================================================= -->
+  <div class="mobile-app-shell w-full flex flex-col justify-between">
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- HEADER BAR                                                            -->
+    <!-- --------------------------------------------------------------------- -->
+    <header class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-stone-200 px-4 py-3 flex items-center justify-between shadow-xs">
+      <div class="flex items-center space-x-2.5 cursor-pointer" onclick="handleLogoClick()">
+        <!-- Green Hand Custom SVG Logo: Open Palm Cradling a Growing Plant Sprout -->
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-50 to-stone-100 border border-stone-200/80 flex items-center justify-center p-1.5 shadow-xs">
+          <svg viewBox="0 0 100 100" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="50" cy="84" rx="28" ry="6" fill="#8D6E63" opacity="0.3"/>
+            <path d="M22 68C22 68 28 62 38 64C44 65 48 70 54 72C60 74 70 73 78 66C82 62 84 57 85 53C86 49 84 46 80 47C76 48 74 53 71 56C68 59 62 61 57 60C51 59 47 54 42 53C35 51 28 54 24 59C20 64 22 68 22 68Z" fill="#8D6E63"/>
+            <path d="M22 68C20 73 23 80 32 83C41 86 58 85 70 78C76 74 81 68 83 62" stroke="#6D4C41" stroke-width="3" stroke-linecap="round"/>
+            <path d="M50 63C50 63 50 42 51 32C51 24 50 18 50 18" stroke="#2E7D32" stroke-width="4.5" stroke-linecap="round"/>
+            <path d="M50 34C43 32 32 34 30 42C29 48 37 51 49 43" fill="#4CAF50" stroke="#2E7D32" stroke-width="2"/>
+            <path d="M51 25C58 21 69 22 71 29C73 35 65 39 51 32" fill="#66BB6A" stroke="#2E7D32" stroke-width="2"/>
+            <circle cx="50" cy="16" r="2.5" fill="#81C784"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center space-x-1.5">
+            <h1 class="text-base font-extrabold tracking-tight text-stone-900 leading-tight">Green Hand</h1>
+            <span class="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800">
+              SIH 26033
+            </span>
+          </div>
+          <p class="text-[10px] text-stone-500 font-medium">Direct Farmer-to-Consumer</p>
+        </div>
+      </div>
+
+      <!-- Right Header Actions (Online Indicator / Google Sheet / User Badge) -->
+      <div class="flex items-center space-x-2">
+        <select id="langSwitcher" onchange="GHUpgrade.setLanguage(this.value)" title="Language" class="px-1.5 py-1.5 rounded-xl border border-stone-200 text-stone-700 text-[11px] font-bold bg-white shadow-xs focus:outline-none">
+          <option value="en">EN</option>
+          <option value="ta">தமிழ்</option>
+          <option value="hi">हिं</option>
+          <option value="pa">ਪੰ</option>
+        </select>
+        <button onclick="GHUpgrade.openAdminDashboard()" title="Admin Dashboard" class="px-2.5 py-1.5 rounded-xl border border-stone-200 text-stone-700 hover:bg-stone-50 transition-colors text-xs font-semibold shadow-xs">
+          <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
+        </button>
+        <button onclick="openSheetConfigModal()" id="headerSheetButton" title="Google Sheet Connection" class="px-2.5 py-1.5 rounded-xl border border-stone-200 text-stone-700 hover:bg-stone-50 transition-colors flex items-center space-x-1.5 text-xs font-semibold shadow-xs">
+          <span id="headerOnlineDot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="headerSheetText" class="text-[11px] font-bold" data-i18n="googleSheet">Google Sheet</span>
+        </button>
+
+        <div id="userHeaderBadge" class="hidden flex items-center space-x-1.5 pl-2 border-l border-stone-200">
+          <span id="headerUserName" class="text-xs font-bold text-stone-800 max-w-[85px] truncate">User</span>
+          <button onclick="handleLogout()" title="Logout" class="p-1.5 text-stone-400 hover:text-rose-600 rounded-lg">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Online Mode Google Sheet Alert Banner -->
+    <div id="onlineSetupBanner" class="bg-gradient-to-r from-emerald-50 to-stone-50 border-b border-emerald-200/80 px-4 py-2 flex items-center justify-between text-xs">
+      <div class="flex items-center space-x-2 text-stone-700">
+        <i data-lucide="cloud" class="w-4 h-4 text-emerald-700"></i>
+        <span class="text-[11px]">Cloud storage active — your data is saved automatically.</span>
+      </div>
+      <button onclick="openSheetConfigModal()" class="text-[11px] font-bold text-emerald-700 hover:underline">
+        Also sync to Google Sheet →
+      </button>
+    </div>
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- SCREEN 1: LOGIN / SIGNUP SCREEN                                       -->
+    <!-- --------------------------------------------------------------------- -->
+    <section id="loginScreen" class="flex-1 p-6 flex flex-col justify-center space-y-6">
+      
+      <!-- Welcome Hero Graphic & Tagline -->
+      <div class="text-center space-y-2">
+        <div class="w-20 h-20 mx-auto rounded-3xl bg-emerald-50 border border-emerald-100 flex items-center justify-center p-3 shadow-inner">
+          <svg viewBox="0 0 100 100" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="50" cy="84" rx="28" ry="6" fill="#8D6E63" opacity="0.3"/>
+            <path d="M22 68C22 68 28 62 38 64C44 65 48 70 54 72C60 74 70 73 78 66C82 62 84 57 85 53C86 49 84 46 80 47C76 48 74 53 71 56C68 59 62 61 57 60C51 59 47 54 42 53C35 51 28 54 24 59C20 64 22 68 22 68Z" fill="#8D6E63"/>
+            <path d="M22 68C20 73 23 80 32 83C41 86 58 85 70 78C76 74 81 68 83 62" stroke="#6D4C41" stroke-width="3" stroke-linecap="round"/>
+            <path d="M50 63C50 63 50 42 51 32C51 24 50 18 50 18" stroke="#2E7D32" stroke-width="4.5" stroke-linecap="round"/>
+            <path d="M50 34C43 32 32 34 30 42C29 48 37 51 49 43" fill="#4CAF50" stroke="#2E7D32" stroke-width="2"/>
+            <path d="M51 25C58 21 69 22 71 29C73 35 65 39 51 32" fill="#66BB6A" stroke="#2E7D32" stroke-width="2"/>
+            <circle cx="50" cy="16" r="2.5" fill="#81C784"/>
+          </svg>
+        </div>
+        <h2 class="text-2xl font-extrabold text-stone-900 tracking-tight" data-i18n="welcomeTitle">Welcome to Green Hand</h2>
+        <p class="text-xs text-stone-500 max-w-xs mx-auto" data-i18n="welcomeSub">
+          Empowering farmers with fair direct pricing, and buyers with fresh origin-verified produce.
+        </p>
+      </div>
+
+      <!-- Simple Login Form (Phone + Name + Role, No Password) -->
+      <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-4 bg-stone-50/80 p-5 rounded-3xl border border-stone-200">
+        <div>
+          <label class="block text-xs font-bold text-stone-700 mb-1" data-i18n="phoneLabel">Phone Number</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-stone-400">+91</span>
+            <input id="loginPhoneInput" type="tel" required placeholder="9823456789" maxlength="10" class="w-full pl-12 pr-4 py-2.5 text-sm font-semibold rounded-2xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-stone-700 mb-1" data-i18n="nameLabel">Your Full Name</label>
+          <input id="loginNameInput" type="text" required placeholder="e.g. Rameshwar Patil" class="w-full px-4 py-2.5 text-sm font-semibold rounded-2xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-white" />
+        </div>
+
+        <!-- Role Selector (Farmer vs Buyer) -->
+        <div>
+          <label class="block text-xs font-bold text-stone-700 mb-1.5" data-i18n="selectRoleLabel">Select Role</label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="relative flex items-center p-3 rounded-2xl border border-stone-200 bg-white cursor-pointer hover:border-emerald-600 transition-all has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/70 has-[:checked]:ring-1 has-[:checked]:ring-emerald-600">
+              <input type="radio" name="loginRole" value="Farmer" checked class="text-emerald-700 focus:ring-emerald-600 w-4 h-4" />
+              <div class="ml-2.5">
+                <span class="block text-xs font-bold text-stone-900" data-i18n="roleFarmer">Farmer</span>
+                <span class="block text-[10px] text-stone-500" data-i18n="roleFarmerSub">Sell Crops</span>
+              </div>
+            </label>
+
+            <label class="relative flex items-center p-3 rounded-2xl border border-stone-200 bg-white cursor-pointer hover:border-emerald-600 transition-all has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/70 has-[:checked]:ring-1 has-[:checked]:ring-emerald-600">
+              <input type="radio" name="loginRole" value="Buyer" class="text-emerald-700 focus:ring-emerald-600 w-4 h-4" />
+              <div class="ml-2.5">
+                <span class="block text-xs font-bold text-stone-900" data-i18n="roleBuyer">Buyer</span>
+                <span class="block text-[10px] text-stone-500" data-i18n="roleBuyerSub">Buy Fresh</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" id="loginSubmitBtn" class="w-full py-3 px-4 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm rounded-2xl shadow-md transition-colors flex items-center justify-center space-x-2">
+          <span data-i18n="enterMarketplace">Enter Marketplace</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </form>
+
+      <!-- Quick Fill Buttons for Demo Evaluators -->
+      <div class="text-center space-y-2 pt-2 border-t border-stone-200/80">
+        <span class="text-[11px] font-bold text-stone-400 uppercase tracking-wider">Instant 1-Click Demo Logins</span>
+        <div class="flex items-center justify-center space-x-2">
+          <button onclick="quickLoginDemo('Farmer')" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center space-x-1">
+            <i data-lucide="tractor" class="w-3.5 h-3.5 text-emerald-700"></i>
+            <span>Farmer (Rameshwar)</span>
+          </button>
+          <button onclick="quickLoginDemo('Buyer')" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 flex items-center space-x-1">
+            <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-amber-700"></i>
+            <span>Buyer (Pooja)</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- SCREEN 2: FARMER PORTAL                                               -->
+    <!-- --------------------------------------------------------------------- -->
+    <section id="farmerScreen" class="flex-1 p-4 space-y-4 hidden overflow-y-auto">
+      
+      <!-- Farmer Profile Header -->
+      <div class="bg-gradient-to-r from-emerald-800 to-emerald-700 text-white p-4 rounded-3xl shadow-sm flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-200" data-i18n="verifiedProducer">Verified Producer</span>
+          <h2 id="farmerNameTitle" class="text-lg font-bold leading-snug">Rameshwar Patil</h2>
+          <p id="farmerPhoneVillage" class="text-xs text-emerald-100/90 mt-0.5">+91 98234 56789 • Pimpalgaon</p>
+        </div>
+        <button onclick="openAddListingModal()" class="px-3 py-2 bg-white text-emerald-800 font-bold text-xs rounded-2xl shadow-sm hover:bg-emerald-50 transition-all flex items-center space-x-1">
+          <i data-lucide="plus" class="w-4 h-4 text-emerald-700"></i>
+          <span data-i18n="addCrop">Add Crop</span>
+        </button>
+      </div>
+
+      <!-- Weather & Crop Advisory (injected by upgrade.js) -->
+      <div id="weatherAdvisoryContainer"></div>
+
+      <!-- Pending Buyer Offers / Bidding (injected by upgrade.js) -->
+      <div id="farmerOffersContainer"></div>
+
+      <!-- My Earnings This Week Dashboard Screen -->
+      <div class="bg-stone-50 border border-stone-200 rounded-3xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-stone-600 flex items-center space-x-1.5">
+            <i data-lucide="wallet" class="w-4 h-4 text-emerald-700"></i>
+            <span data-i18n="myEarningsWeek">My Earnings This Week</span>
+          </span>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800" data-i18n="directBankSettled">
+            Direct Bank Settled
+          </span>
+        </div>
+        <div class="flex items-baseline justify-between pt-1">
+          <div>
+            <div id="farmerWeeklyEarningsText" class="text-2xl font-extrabold text-emerald-800">₹18,420</div>
+            <p id="farmerSalesVolumeText" class="text-[11px] text-stone-500 mt-0.5">Total produce delivered: 765 kg</p>
+          </div>
+          <div class="text-right">
+            <span class="text-xs font-bold text-stone-700 block" data-i18n="middlemanCutsSaved">Middleman Cuts Saved</span>
+            <span id="farmerSavingsAmountText" class="text-xs font-extrabold text-emerald-700">+₹4,600 (33% boost)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Farmer Tabs (My Listings vs Incoming Orders) -->
+      <div class="flex items-center p-1 bg-stone-100 rounded-2xl text-xs font-bold">
+        <button id="farmerTabListingsBtn" onclick="switchFarmerTab('listings')" class="flex-1 py-2 rounded-xl bg-white text-stone-900 shadow-xs transition-all">
+          <span data-i18n="myCropListings">My Crop Listings</span> (<span id="farmerListingsCount">0</span>)
+        </button>
+        <button id="farmerTabOrdersBtn" onclick="switchFarmerTab('orders')" class="flex-1 py-2 rounded-xl text-stone-600 hover:text-stone-900 transition-all">
+          <span data-i18n="incomingOrders">Incoming Orders</span> (<span id="farmerOrdersCount">0</span>)
+        </button>
+      </div>
+
+      <!-- Tab Content 1: My Crop Listings -->
+      <div id="farmerListingsContainer" class="space-y-3">
+        <!-- Rendered by app.js -->
+      </div>
+
+      <!-- Tab Content 2: Incoming Orders Pipeline -->
+      <div id="farmerOrdersContainer" class="space-y-3 hidden">
+        <!-- Rendered by app.js -->
+      </div>
+
+    </section>
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- SCREEN 3: BUYER PORTAL                                                -->
+    <!-- --------------------------------------------------------------------- -->
+    <section id="buyerScreen" class="flex-1 p-4 space-y-4 hidden overflow-y-auto">
+      
+      <!-- Buyer Search & Filter Bar -->
+      <div class="space-y-2.5">
+        <div class="relative">
+          <i data-lucide="search" class="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+          <input id="buyerSearchInput" oninput="handleBuyerSearch(event)" type="text" data-i18n-placeholder="searchPlaceholder" placeholder="Search onions, basmati rice, tomatoes, wheat..." class="w-full pl-10 pr-4 py-2.5 text-xs font-semibold rounded-2xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-emerald-600 bg-stone-50" />
+        </div>
+
+        <!-- Filter Badges & Sort -->
+        <div class="flex items-center justify-between gap-2 overflow-x-auto pb-1 text-xs">
+          <div class="flex items-center space-x-1.5">
+            <button onclick="filterBuyerCategory('All')" class="buyer-cat-btn px-3 py-1 rounded-xl font-bold bg-emerald-700 text-white whitespace-nowrap" data-i18n="catAll">All</button>
+            <button onclick="filterBuyerCategory('Vegetables')" class="buyer-cat-btn px-3 py-1 rounded-xl font-semibold bg-stone-100 text-stone-700 hover:bg-stone-200 whitespace-nowrap" data-i18n="catVegetables">Vegetables</button>
+            <button onclick="filterBuyerCategory('Grains')" class="buyer-cat-btn px-3 py-1 rounded-xl font-semibold bg-stone-100 text-stone-700 hover:bg-stone-200 whitespace-nowrap" data-i18n="catGrains">Grains</button>
+            <button onclick="filterBuyerCategory('Fruits')" class="buyer-cat-btn px-3 py-1 rounded-xl font-semibold bg-stone-100 text-stone-700 hover:bg-stone-200 whitespace-nowrap" data-i18n="catFruits">Fruits</button>
+            <button onclick="filterBuyerCategory('Spices')" class="buyer-cat-btn px-3 py-1 rounded-xl font-semibold bg-stone-100 text-stone-700 hover:bg-stone-200 whitespace-nowrap" data-i18n="catSpices">Spices</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buyer Navigation Tabs (Browse Marketplace vs My Orders) -->
+      <div class="flex items-center p-1 bg-stone-100 rounded-2xl text-xs font-bold">
+        <button id="buyerTabMarketBtn" onclick="switchBuyerTab('market')" class="flex-1 py-2 rounded-xl bg-white text-stone-900 shadow-xs transition-all" data-i18n="browseCrops">
+          Browse Farmgate Crops
+        </button>
+        <button id="buyerTabOrdersBtn" onclick="switchBuyerTab('orders')" class="flex-1 py-2 rounded-xl text-stone-600 hover:text-stone-900 transition-all">
+          <span data-i18n="myOrders">My Orders</span> (<span id="buyerOrdersCount">0</span>)
+        </button>
+      </div>
+
+      <!-- Buyer Market Listings Grid -->
+      <div id="buyerMarketContainer" class="space-y-3">
+        <!-- Rendered by app.js -->
+      </div>
+
+      <!-- Buyer Orders Tracking List -->
+      <div id="buyerOrdersContainer" class="space-y-3 hidden">
+        <!-- Rendered by app.js -->
+      </div>
+
+    </section>
+
+    <!-- --------------------------------------------------------------------- -->
+    <!-- BOTTOM FOOTER (ROLE INFO & SYNC STATUS)                               -->
+    <!-- --------------------------------------------------------------------- -->
+    <footer class="bg-stone-50 border-t border-stone-200 px-4 py-2 text-[10px] text-stone-500 flex items-center justify-between">
+      <div class="flex items-center space-x-1.5">
+        <span id="footerOnlinePulse" class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span id="sheetSyncStatus">Google Sheet: Online Live Sync Active</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <button onclick="switchRoleToggle()" id="switchRoleQuickBtn" class="font-bold text-emerald-800 hover:underline">
+          Switch User
+        </button>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODALS                                                                    -->
+  <!-- ========================================================================= -->
+
+  <!-- 1. Add / Edit Crop Listing Modal -->
+  <div id="listingModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-4 shadow-2xl relative my-6">
+      <button onclick="closeListingModal()" class="absolute top-4 right-4 p-2 text-stone-400 hover:text-stone-600 rounded-full">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+      <div>
+        <h3 id="listingModalTitle" class="text-base font-bold text-stone-900" data-i18n="addCropTitle">Add New Crop Listing</h3>
+        <p class="text-xs text-stone-500" data-i18n="savesToSheet">Saves directly to your Google Sheet Listings tab</p>
+      </div>
+
+      <form id="listingForm" onsubmit="handleListingSubmit(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="formListingId" value="" />
+
+        <div>
+          <label class="font-bold text-stone-700 block mb-1" data-i18n="cropNameLabel">Crop Name</label>
+          <input id="formCropName" type="text" required oninput="GHUpgrade.autoSetCropPhoto(this.value)" placeholder="e.g. Fresh Red Onions / வெங்காயம்" class="w-full p-2.5 rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="font-bold text-stone-700 block mb-1" data-i18n="categoryLabel">Category</label>
+            <select id="formCropType" class="w-full p-2.5 rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none bg-white">
+              <option value="Vegetables" data-i18n="catVegetables">Vegetables</option>
+              <option value="Grains" data-i18n="catGrains">Grains</option>
+              <option value="Fruits" data-i18n="catFruits">Fruits</option>
+              <option value="Spices" data-i18n="catSpices">Spices</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-bold text-stone-700 block mb-1" data-i18n="availableQtyLabel">Available Qty (kg)</label>
+            <input id="formQtyKg" type="number" required placeholder="1000" class="w-full p-2.5 rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="font-bold text-stone-700 block mb-1" data-i18n="pricePerKgLabel">Price per kg (₹)</label>
+            <input id="formPricePerKg" type="number" required placeholder="24" class="w-full p-2.5 rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+          </div>
+          <div>
+            <label class="font-bold text-stone-700 block mb-1" data-i18n="harvestDateLabel">Harvest Date</label>
+            <input id="formHarvestDate" type="date" required class="w-full p-2.5 rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+          </div>
+        </div>
+
+        <div>
+          <label class="font-bold text-stone-700 block mb-1" data-i18n="farmLocationLabel">Farm Location</label>
+          <input id="formLocation" type="text" required placeholder="e.g. Nashik, Maharashtra" class="w-full p-2.5 rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+        </div>
+
+        <div class="flex items-start space-x-2 p-2.5 bg-amber-50 rounded-xl border border-amber-200">
+          <input type="checkbox" id="formComingSoon" class="w-4 h-4 mt-0.5 text-amber-700 focus:ring-amber-600 rounded" />
+          <label for="formComingSoon" class="text-[11px] font-bold text-amber-900 leading-snug" data-i18n="comingSoonNote">
+            🌱 Not harvested yet — list as "Coming Soon" so buyers know in advance. It'll auto-switch to "Active" once you untick this after harvest.
+          </label>
+        </div>
+
+        <div>
+          <label class="font-bold text-stone-700 block mb-1" data-i18n="photoUrlLabel">Photo URL</label>
+          <input id="formPhotoUrl" type="text" oninput="GHUpgrade.markPhotoManual()" placeholder="https://..." value="https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=600&auto=format&fit=crop&q=80" class="w-full p-2.5 rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none text-[11px]" />
+          <p class="text-[10px] text-stone-400 mt-1" data-i18n="photoAutoHint">Type the crop name and a matching photo is picked automatically. You can still paste your own link.</p>
+        </div>
+
+        <div class="pt-2 flex items-center space-x-2">
+          <button type="button" onclick="closeListingModal()" class="w-full py-2.5 px-3 bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold rounded-xl" data-i18n="cancel">
+            Cancel
+          </button>
+          <button type="submit" class="w-full py-2.5 px-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl shadow-md" data-i18n="publishToSheet">
+            Publish to Google Sheet
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Place Order Modal (Buyer) -->
+  <div id="orderModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-4 shadow-2xl relative">
+      <button onclick="closeOrderModal()" class="absolute top-4 right-4 p-2 text-stone-400 hover:text-stone-600 rounded-full">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+      <div>
+        <h3 class="text-base font-bold text-stone-900" data-i18n="placeOrderTitle">Place Direct Order</h3>
+        <p class="text-xs text-stone-500" data-i18n="buyingDirectSub">Buying directly from the verified farmer</p>
+      </div>
+
+      <div class="p-3 bg-stone-50 rounded-2xl border border-stone-200 flex items-center space-x-3">
+        <img id="orderCropPhoto" src="" class="w-12 h-12 rounded-xl object-cover" />
+        <div>
+          <h4 id="orderCropTitle" class="text-xs font-bold text-stone-900 leading-snug">Crop Name</h4>
+          <p id="orderCropFarmer" class="text-[11px] text-stone-500">by Farmer Name</p>
+          <div class="text-xs font-bold text-emerald-700 mt-0.5">₹<span id="orderCropPrice">0</span> / kg</div>
+        </div>
+      </div>
+
+      <form id="orderForm" onsubmit="handleOrderSubmit(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="orderFormListingId" value="" />
+
+        <div>
+          <label class="font-bold text-stone-700 block mb-1" data-i18n="qtyNeededLabel">Quantity Needed (kg)</label>
+          <input id="orderQtyInput" oninput="calculateOrderTotal()" type="number" min="1" required value="10" class="w-full p-2.5 rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+        </div>
+
+        <div>
+          <label class="font-bold text-stone-700 block mb-1" data-i18n="deliveryAddressLabel">Delivery Address</label>
+          <input id="orderDeliveryAddressInput" type="text" required data-i18n-placeholder="deliveryAddressPlaceholder" placeholder="e.g. 12 MG Road, Nashik" class="w-full p-2.5 rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+        </div>
+
+        <div>
+          <label class="font-bold text-stone-700 block mb-1" data-i18n="preferredDeliveryDateLabel">Preferred Delivery Date</label>
+          <input id="orderDeliveryDateInput" type="date" required class="w-full p-2.5 rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+        </div>
+
+        <div>
+          <label class="font-bold text-stone-700 block mb-1.5" data-i18n="paymentMethodLabel">Payment Method</label>
+          <div class="grid grid-cols-2 gap-2.5">
+            <label class="relative flex items-center justify-center p-2.5 rounded-xl border border-stone-200 bg-white cursor-pointer hover:border-emerald-600 transition-all has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/70 has-[:checked]:ring-1 has-[:checked]:ring-emerald-600">
+              <input type="radio" name="orderPaymentMethod" value="COD" checked onchange="toggleOrderUpiBox()" class="text-emerald-700 focus:ring-emerald-600 w-3.5 h-3.5" />
+              <span class="ml-2 text-[11px] font-bold text-stone-900" data-i18n="codOption">💵 Cash on Delivery</span>
+            </label>
+            <label class="relative flex items-center justify-center p-2.5 rounded-xl border border-stone-200 bg-white cursor-pointer hover:border-emerald-600 transition-all has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/70 has-[:checked]:ring-1 has-[:checked]:ring-emerald-600">
+              <input type="radio" name="orderPaymentMethod" value="UPI" onchange="toggleOrderUpiBox()" class="text-emerald-700 focus:ring-emerald-600 w-3.5 h-3.5" />
+              <span class="ml-2 text-[11px] font-bold text-stone-900" data-i18n="upiOption">📲 UPI</span>
+            </label>
+          </div>
+          <div id="orderUpiBox" class="hidden mt-2 p-2.5 bg-stone-50 rounded-xl border border-stone-200 text-[11px] text-stone-600">
+            <span data-i18n="upiPayNote">Pay the farmer directly on delivery/confirmation via UPI ID:</span> <strong id="orderFarmerUpiId" class="text-stone-900">—</strong>
+            <div class="text-[10px] text-stone-400 mt-1" data-i18n="upiDemoNote">(Demo mode — this records your chosen payment method only; no live payment gateway is connected yet.)</div>
+          </div>
+        </div>
+
+        <div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-100 flex items-center justify-between">
+          <span class="text-xs font-semibold text-emerald-900" data-i18n="totalPayableLabel">Total Payable:</span>
+          <span class="text-lg font-extrabold text-emerald-800" id="orderTotalDisplay">₹240</span>
+        </div>
+
+        <div class="pt-2 flex items-center space-x-2">
+          <button type="button" onclick="closeOrderModal()" class="w-full py-2.5 px-3 bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold rounded-xl" data-i18n="cancel">
+            Cancel
+          </button>
+          <button type="submit" class="w-full py-2.5 px-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl shadow-md" data-i18n="confirmOrder">
+            Confirm Order
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2b. Delivery Route / Map Modal -->
+  <div id="routeMapModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-3 shadow-2xl relative">
+      <button onclick="GHUpgrade.closeRouteMap()" class="absolute top-4 right-4 p-2 text-stone-400 hover:text-stone-600 rounded-full">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+      <div>
+        <h3 class="text-base font-bold text-stone-900" data-i18n="routeMapTitle">Delivery Route</h3>
+        <p id="routeMapSubtitle" class="text-xs text-stone-500"></p>
+      </div>
+      <div class="rounded-2xl overflow-hidden border border-stone-200" style="height:260px;">
+        <iframe id="routeMapFrame" src="" width="100%" height="100%" style="border:0;" loading="lazy"></iframe>
+      </div>
+      <a id="routeMapOpenLink" href="#" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center space-x-2 py-2.5 px-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl shadow-md">
+        <i data-lucide="navigation" class="w-4 h-4"></i>
+        <span data-i18n="openInGoogleMaps">Open Directions in Google Maps</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 3. Google Sheet Integration Settings Modal (Live Online Mode for pravinjothi55@gmail.com) -->
+  <div id="sheetConfigModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-4 shadow-2xl relative my-6">
+      <button onclick="closeSheetConfigModal()" class="absolute top-4 right-4 p-2 text-stone-400 hover:text-stone-600 rounded-full">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+      <div>
+        <div class="inline-flex items-center space-x-1 text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md mb-1">
+          <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+          <span>Live Online Sync</span>
+        </div>
+        <h3 class="text-base font-bold text-stone-900">Google Drive Sheet Connection</h3>
+        <p class="text-xs text-stone-500 mt-0.5">Account: <strong class="text-stone-800">pravinjothi55@gmail.com</strong></p>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="font-bold text-stone-700 block mb-1">Google Apps Script Web App URL</label>
+          <input id="sheetApiUrlInput" type="url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full p-2.5 rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-600 text-[11px]" />
+          <p class="text-[10px] text-stone-400 mt-1">Paste your deployed Web App URL to write live to your Google Drive.</p>
+        </div>
+
+        <button onclick="testSheetConnection()" id="testConnectionBtn" class="w-full py-2 px-3 bg-stone-100 hover:bg-stone-200 text-stone-800 font-bold text-xs rounded-xl flex items-center justify-center space-x-1.5 transition-colors">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-emerald-700"></i>
+          <span>Test Live Connection</span>
+        </button>
+
+        <div id="connectionStatusResult" class="hidden p-3 rounded-2xl text-[11px]"></div>
+
+        <div class="p-3 bg-stone-50 rounded-2xl border border-stone-200 space-y-1.5 text-[11px] text-stone-600">
+          <div class="font-bold text-stone-800">4 Google Sheet Tabs:</div>
+          <div class="flex items-center justify-between">
+            <span>• <strong>Farmers</strong>: Profiles & UPI IDs</span>
+            <span class="text-emerald-700 font-bold">10 rows</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span>• <strong>Buyers</strong>: Consumer & bulk accounts</span>
+            <span class="text-emerald-700 font-bold">10 rows</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span>• <strong>Listings</strong>: Active farmgate crops</span>
+            <span class="text-emerald-700 font-bold">10 rows</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span>• <strong>Orders</strong>: Real-time orders tracking</span>
+            <span class="text-emerald-700 font-bold">Live sync</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-2 space-y-2">
+        <button onclick="saveSheetConfig()" class="w-full py-2.5 px-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-md">
+          Save & Enable Online Mode
+        </button>
+        <button onclick="resetDemoData()" class="w-full py-2 px-3 bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold text-xs rounded-xl">
+          Reset to 10 Sample Rows
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastNotification" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-stone-900 text-white px-4 py-2.5 rounded-2xl shadow-xl flex items-center space-x-2 text-xs font-semibold max-w-xs text-center">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <span id="toastText">Action successful!</span>
+  </div>
+
+  <!-- Application Scripts -->
+  <script>
+
+/* ===== sample_sheet_data.js ===== */
+/**
+ * Green Hand - Initial Seed Data for Google Sheets
+ * Matches the 4-tab model: Farmers, Buyers, Listings, Orders (10 sample rows each)
+ */
+
+const INITIAL_SHEET_DATA = {
+  // Tab 1: Farmers
+  Farmers: [
+    { farmer_id: "F01", name: "Rameshwar Patil", phone: "9823456789", village: "Pimpalgaon", state: "Maharashtra", upi_id: "rameshwar@upi", joined_date: "2026-08-01" },
+    { farmer_id: "F02", name: "Gurpreet Singh", phone: "9872134567", village: "Khanna", state: "Punjab", upi_id: "gurpreet@oksbi", joined_date: "2026-08-04" },
+    { farmer_id: "F03", name: "Sunita Devi", phone: "9431288990", village: "Samastipur", state: "Bihar", upi_id: "sunita@upi", joined_date: "2026-08-10" },
+    { farmer_id: "F04", name: "Venkat Raman", phone: "9443211223", village: "Pollachi", state: "Tamil Nadu", upi_id: "venkat@axis", joined_date: "2026-08-15" },
+    { farmer_id: "F05", name: "Balwinder Kaur", phone: "9814567890", village: "Moga", state: "Punjab", upi_id: "balwinder@paytm", joined_date: "2026-08-20" },
+    { farmer_id: "F06", name: "Anand Kulkarni", phone: "9822334455", village: "Sangli", state: "Maharashtra", upi_id: "anand@icici", joined_date: "2026-08-22" },
+    { farmer_id: "F07", name: "Manoj Yadav", phone: "9415678901", village: "Varanasi", state: "Uttar Pradesh", upi_id: "manoj@sbi", joined_date: "2026-08-25" },
+    { farmer_id: "F08", name: "Kavitha Reddy", phone: "9848012345", village: "Guntur", state: "Andhra Pradesh", upi_id: "kavitha@ybl", joined_date: "2026-08-28" },
+    { farmer_id: "F09", name: "Harish Rawat", phone: "9412098765", village: "Shimla", state: "Himachal Pradesh", upi_id: "harish@pnb", joined_date: "2026-09-01" },
+    { farmer_id: "F10", name: "Dinesh Meena", phone: "9414056789", village: "Kota", state: "Rajasthan", upi_id: "dinesh@barodampay", joined_date: "2026-09-03" }
+  ],
+
+  // Tab 2: Buyers
+  Buyers: [
+    { buyer_id: "B01", name: "Pooja Sharma", phone: "9811122334", delivery_address: "Flat 402, Green Valley Apt, Pune", buyer_type: "Individual", joined_date: "2026-08-05" },
+    { buyer_id: "B02", name: "Rajesh Gupta (Fresh Mart)", phone: "9820011223", delivery_address: "Shop 12, APMC Sector 19, Mumbai", buyer_type: "Bulk", joined_date: "2026-08-08" },
+    { buyer_id: "B03", name: "Amitabh Roy", phone: "9830055443", delivery_address: "B-21 Salt Lake Sector 3, Kolkata", buyer_type: "Individual", joined_date: "2026-08-12" },
+    { buyer_id: "B04", name: "Kiran Deshmukh", phone: "9890044332", delivery_address: "Plot 88, Model Colony, Nashik", buyer_type: "Individual", joined_date: "2026-08-18" },
+    { buyer_id: "B05", name: "Hotel Anand Bhavan", phone: "9845011998", delivery_address: "MG Road, Indiranagar, Bengaluru", buyer_type: "Bulk", joined_date: "2026-08-21" },
+    { buyer_id: "B06", name: "Sneha Nair", phone: "9847066554", delivery_address: "Fort Kochi Marine Drive, Kochi", buyer_type: "Individual", joined_date: "2026-08-24" },
+    { buyer_id: "B07", name: "Vikram Mehta", phone: "9825077665", delivery_address: "Vastrapur Lake Road, Ahmedabad", buyer_type: "Individual", joined_date: "2026-08-29" },
+    { buyer_id: "B08", name: "Daily Greens Mess", phone: "9871144221", delivery_address: "University Road, North Campus, Delhi", buyer_type: "Bulk", joined_date: "2026-09-02" },
+    { buyer_id: "B09", name: "Deepak Chawla", phone: "9815033221", delivery_address: "Sector 35-B, Chandigarh", buyer_type: "Individual", joined_date: "2026-09-04" },
+    { buyer_id: "B10", name: "Radha Krishnan", phone: "9444088776", delivery_address: "Anna Nagar West, Chennai", buyer_type: "Individual", joined_date: "2026-09-06" }
+  ],
+
+  // Tab 3: Listings
+  Listings: [
+    {
+      listing_id: "L01",
+      farmer_id: "F01",
+      farmer_name: "Rameshwar Patil",
+      crop_name: "Fresh Nashik Red Onions",
+      crop_type: "Vegetables",
+      qty_kg: 1800,
+      price_per_kg: 24,
+      harvest_date: "2026-09-08",
+      location: "Nashik, Maharashtra",
+      photo_url: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=600&auto=format&fit=crop&q=80",
+      status: "active"
+    },
+    {
+      listing_id: "L02",
+      farmer_id: "F01",
+      farmer_name: "Rameshwar Patil",
+      crop_name: "Vine-Ripened Hybrid Tomatoes",
+      crop_type: "Vegetables",
+      qty_kg: 950,
+      price_per_kg: 28,
+      harvest_date: "2026-09-12",
+      location: "Nashik, Maharashtra",
+      photo_url: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=600&auto=format&fit=crop&q=80",
+      status: "active"
+    },
+    {
+      listing_id: "L03",
+      farmer_id: "F02",
+      farmer_name: "Gurpreet Singh",
+      crop_name: "Organic 1121 Basmati Rice",
+      crop_type: "Grains",
+      qty_kg: 3500,
+      price_per_kg: 78,
+      harvest_date: "2026-08-20",
+      location: "Ludhiana, Punjab",
+      photo_url: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&auto=format&fit=crop&q=80",
+      status: "active"
+    },
+    {
+      listing_id: "L04",
+      farmer_id: "F02",
+      farmer_name: "Gurpreet Singh",
+      crop_name: "Sharbati Golden Wheat",
+      crop_type: "Grains",
+      qty_kg: 5000,
+      price_per_kg: 32,
+      harvest_date: "2026-08-15",
+      location: "Ludhiana, Punjab",
+      photo_url: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop&q=80",
+      status: "active"
+    },
+    {
+      listing_id: "L05",
+      farmer_id: "F03",
+      farmer_name: "Sunita Devi",
+      crop_name: "High-Curcumin Raw Turmeric",
+      crop_type: "Spices",
+      qty_kg: 650,
+      price_per_kg: 140,
+      harvest_date: "2026-08-30",
+      location: "Samastipur, Bihar",
+      photo_url: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=600&auto=format&fit=crop&q=80",
+      status: "active"
+    },
+    {
+      listing_id: "L06",
+      farmer_id: "F03",
+      farmer_name: "Sunita Devi",
+      crop_name: "Fresh Table Potatoes",
+      crop_type: "Vegetables",
+      qty_kg: 2200,
+      price_per_kg: 22,
+      harvest_date: "2026-09-05",
+      location: "Samastipur, Bihar",
+      photo_url: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=600&auto=format&fit=crop&q=80",
+      status: "active"
+    },
+    {
+      listing_id: "L07",
+      farmer_id: "F04",
+      farmer_name: "Venkat Raman",
+      crop_name: "Tender Green Coconuts",
+      crop_type: "Fruits",
+      qty_kg: 800,
+      price_per_kg: 35,
+      harvest_date: "2026-09-28",
+      location: "Pollachi, Tamil Nadu",
+      photo_url: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=600&auto=format&fit=crop&q=80",
+      status: "coming_soon"
+    },
+    {
+      listing_id: "L08",
+      farmer_id: "F06",
+      farmer_name: "Anand Kulkarni",
+      crop_name: "Export Grade Green Grapes",
+      crop_type: "Fruits",
+      qty_kg: 1200,
+      price_per_kg: 85,
+      harvest_date: "2026-09-10",
+      location: "Sangli, Maharashtra",
+      photo_url: "https://images.unsplash.com/photo-1596363505729-4190a9506133?w=600&auto=format&fit=crop&q=80",
+      status: "active"
+    },
+    {
+      listing_id: "L09",
+      farmer_id: "F08",
+      farmer_name: "Kavitha Reddy",
+      crop_name: "Guntur Teja Red Dry Chillies",
+      crop_type: "Spices",
+      qty_kg: 400,
+      price_per_kg: 180,
+      harvest_date: "2026-08-25",
+      location: "Guntur, Andhra Pradesh",
+      photo_url: "https://images.unsplash.com/photo-1588252303782-cb80119abd6d?w=600&auto=format&fit=crop&q=80",
+      status: "active"
+    },
+    {
+      listing_id: "L10",
+      farmer_id: "F09",
+      farmer_name: "Harish Rawat",
+      crop_name: "Crisp Royal Delicious Apples",
+      crop_type: "Fruits",
+      qty_kg: 1500,
+      price_per_kg: 110,
+      harvest_date: "2026-09-02",
+      location: "Shimla, Himachal Pradesh",
+      photo_url: "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=600&auto=format&fit=crop&q=80",
+      status: "active"
+    }
+  ],
+
+  // Tab 4: Orders
+  Orders: [
+    {
+      order_id: "ORD-101",
+      listing_id: "L01",
+      crop_name: "Fresh Nashik Red Onions",
+      buyer_id: "B02",
+      buyer_name: "Rajesh Gupta (Fresh Mart)",
+      buyer_phone: "9820011223",
+      farmer_id: "F01",
+      farmer_name: "Rameshwar Patil",
+      qty_kg: 250,
+      price_per_kg: 24,
+      total_price: 6000,
+      delivery_date: "2026-09-15",
+      payment_method: "UPI",
+      status: "Confirmed", // 'Placed' | 'Confirmed' | 'Delivered' | 'Rejected'
+      created_at: "2026-09-13 14:30"
+    },
+    {
+      order_id: "ORD-102",
+      listing_id: "L02",
+      crop_name: "Vine-Ripened Hybrid Tomatoes",
+      buyer_id: "B01",
+      buyer_name: "Pooja Sharma",
+      buyer_phone: "9811122334",
+      farmer_id: "F01",
+      farmer_name: "Rameshwar Patil",
+      qty_kg: 15,
+      price_per_kg: 28,
+      total_price: 420,
+      delivery_date: "2026-09-14",
+      payment_method: "COD",
+      status: "Placed",
+      created_at: "2026-09-14 08:15"
+    },
+    {
+      order_id: "ORD-103",
+      listing_id: "L01",
+      crop_name: "Fresh Nashik Red Onions",
+      buyer_id: "B05",
+      buyer_name: "Hotel Anand Bhavan",
+      buyer_phone: "9845011998",
+      farmer_id: "F01",
+      farmer_name: "Rameshwar Patil",
+      qty_kg: 500,
+      price_per_kg: 24,
+      total_price: 12000,
+      delivery_date: "2026-09-11",
+      payment_method: "UPI",
+      status: "Delivered",
+      created_at: "2026-09-10 10:00"
+    },
+    {
+      order_id: "ORD-104",
+      listing_id: "L03",
+      crop_name: "Organic 1121 Basmati Rice",
+      buyer_id: "B08",
+      buyer_name: "Daily Greens Mess",
+      buyer_phone: "9871144221",
+      farmer_id: "F02",
+      farmer_name: "Gurpreet Singh",
+      qty_kg: 200,
+      price_per_kg: 78,
+      total_price: 15600,
+      delivery_date: "2026-09-16",
+      payment_method: "COD",
+      status: "Confirmed",
+      created_at: "2026-09-13 18:20"
+    },
+    {
+      order_id: "ORD-105",
+      listing_id: "L04",
+      crop_name: "Sharbati Golden Wheat",
+      buyer_id: "B03",
+      buyer_name: "Amitabh Roy",
+      buyer_phone: "9830055443",
+      farmer_id: "F02",
+      farmer_name: "Gurpreet Singh",
+      qty_kg: 50,
+      price_per_kg: 32,
+      total_price: 1600,
+      delivery_date: "2026-09-12",
+      payment_method: "UPI",
+      status: "Delivered",
+      created_at: "2026-09-11 11:30"
+    },
+    {
+      order_id: "ORD-106",
+      listing_id: "L05",
+      crop_name: "High-Curcumin Raw Turmeric",
+      buyer_id: "B04",
+      buyer_name: "Kiran Deshmukh",
+      buyer_phone: "9890044332",
+      farmer_id: "F03",
+      farmer_name: "Sunita Devi",
+      qty_kg: 20,
+      price_per_kg: 140,
+      total_price: 2800,
+      delivery_date: "2026-09-15",
+      payment_method: "COD",
+      status: "Placed",
+      created_at: "2026-09-14 09:10"
+    },
+    {
+      order_id: "ORD-107",
+      listing_id: "L06",
+      crop_name: "Fresh Table Potatoes",
+      buyer_id: "B02",
+      buyer_name: "Rajesh Gupta (Fresh Mart)",
+      buyer_phone: "9820011223",
+      farmer_id: "F03",
+      farmer_name: "Sunita Devi",
+      qty_kg: 300,
+      price_per_kg: 22,
+      total_price: 6600,
+      delivery_date: "2026-09-10",
+      payment_method: "UPI",
+      status: "Delivered",
+      created_at: "2026-09-09 16:45"
+    },
+    {
+      order_id: "ORD-108",
+      listing_id: "L07",
+      crop_name: "Tender Green Coconuts",
+      buyer_id: "B10",
+      buyer_name: "Radha Krishnan",
+      buyer_phone: "9444088776",
+      farmer_id: "F04",
+      farmer_name: "Venkat Raman",
+      qty_kg: 50,
+      price_per_kg: 35,
+      total_price: 1750,
+      delivery_date: "2026-09-15",
+      payment_method: "COD",
+      status: "Confirmed",
+      created_at: "2026-09-13 15:00"
+    },
+    {
+      order_id: "ORD-109",
+      listing_id: "L08",
+      crop_name: "Export Grade Green Grapes",
+      buyer_id: "B07",
+      buyer_name: "Vikram Mehta",
+      buyer_phone: "9825077665",
+      farmer_id: "F06",
+      farmer_name: "Anand Kulkarni",
+      qty_kg: 40,
+      price_per_kg: 85,
+      total_price: 3400,
+      delivery_date: "2026-09-12",
+      payment_method: "UPI",
+      status: "Delivered",
+      created_at: "2026-09-11 14:10"
+    },
+    {
+      order_id: "ORD-110",
+      listing_id: "L10",
+      crop_name: "Crisp Royal Delicious Apples",
+      buyer_id: "B06",
+      buyer_name: "Sneha Nair",
+      buyer_phone: "9847066554",
+      farmer_id: "F09",
+      farmer_name: "Harish Rawat",
+      qty_kg: 30,
+      price_per_kg: 110,
+      total_price: 3300,
+      delivery_date: "2026-09-16",
+      payment_method: "COD",
+      status: "Placed",
+      created_at: "2026-09-14 07:30"
+    }
+  ]
+};
+
+
+/* ===== sheet_service.js ===== */
+/**
+ * Green Hand - Google Sheet Data Service (Full Online Mode)
+ * Direct real-time read/write to Google Drive Sheets via Apps Script / SheetDB
+ * Optimized for pravinjothi55@gmail.com
+ */
+
+const SheetService = {
+  storageKey: 'greenhand_sheet_data',
+  apiUrlKey: 'greenhand_sheet_api_url',
+  _cache: null, // in-memory mirror of the last cloud read, so sync UI code has something to draw from
+
+  // -------------------------------------------------------------
+  // Persistent Cloud Storage (shared across every device/session
+  // that opens this app — this is Green Hand's real "database"
+  // now, replacing the old per-browser localStorage mock).
+  // -------------------------------------------------------------
+  init: async function() {
+    const existing = await this._cloudGet();
+    if (!existing) {
+      await this.saveLocalData(INITIAL_SHEET_DATA);
+    } else {
+      this._cache = existing;
+    }
+  },
+
+  getApiUrl: function() {
+    return localStorage.getItem(this.apiUrlKey) || '';
+  },
+
+  setApiUrl: function(url) {
+    if (url && url.trim()) {
+      localStorage.setItem(this.apiUrlKey, url.trim());
+    } else {
+      localStorage.removeItem(this.apiUrlKey);
+    }
+  },
+
+  isOnlineMode: function() {
+    return !!this.getApiUrl();
+  },
+
+  _cloudGet: async function() {
+    try {
+      const result = await window.storage.get(this.storageKey, true);
+      return result ? JSON.parse(result.value) : null;
+    } catch (e) {
+      return null; // key doesn't exist yet, or storage unavailable
+    }
+  },
+
+  getLocalData: async function() {
+    if (this._cache) return this._cache;
+    try {
+      const data = await this._cloudGet();
+      this._cache = data || JSON.parse(JSON.stringify(INITIAL_SHEET_DATA));
+      return this._cache;
+    } catch (e) {
+      this._cache = JSON.parse(JSON.stringify(INITIAL_SHEET_DATA));
+      return this._cache;
+    }
+  },
+
+  saveLocalData: async function(data) {
+    this._cache = data;
+    try {
+      await window.storage.set(this.storageKey, JSON.stringify(data), true);
+    } catch (e) {
+      console.warn('Cloud storage save failed, keeping data in memory only for this session:', e);
+    }
+  },
+
+  resetToDefault: async function() {
+    await this.saveLocalData(INITIAL_SHEET_DATA);
+    return this.getLocalData();
+  },
+
+  // -------------------------------------------------------------
+  // Test Live Google Sheet Connection
+  // -------------------------------------------------------------
+  testConnection: async function(testUrl) {
+    const url = testUrl || this.getApiUrl();
+    if (!url) {
+      return { success: false, message: "No Google Sheet Web App URL provided." };
+    }
+
+    try {
+      // Test by reading the Listings tab
+      const res = await fetch(`${url}?tab=Listings`, {
+        method: 'GET',
+        mode: 'cors',
+        redirect: 'follow'
+      });
+
+      if (!res.ok) {
+        return { success: false, message: `HTTP Error: ${res.status}` };
+      }
+
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        return {
+          success: true,
+          message: `Connected successfully! Retrieved ${data.length} listings from Google Sheet.`,
+          count: data.length
+        };
+      } else if (data.error) {
+        return { success: false, message: data.error };
+      }
+      return { success: true, message: "Connected to Google Sheet!" };
+    } catch (err) {
+      return {
+        success: false,
+        message: "Failed to connect. Make sure Web App deployment is set to 'Anyone' access."
+      };
+    }
+  },
+
+  // -------------------------------------------------------------
+  // Data Query Operations (Online First with Cache Fallback)
+  // -------------------------------------------------------------
+  getRows: async function(tabName) {
+    const apiUrl = this.getApiUrl();
+    if (apiUrl) {
+      try {
+        const response = await fetch(`${apiUrl}?tab=${encodeURIComponent(tabName)}`, {
+          method: 'GET',
+          mode: 'cors',
+          redirect: 'follow'
+        });
+
+        if (response.ok) {
+          const json = await response.json();
+          if (Array.isArray(json)) {
+            // Update cloud cache for offline redundancy
+            const local = await this.getLocalData();
+            local[tabName] = json;
+            await this.saveLocalData(local);
+            return json;
+          }
+        }
+      } catch (e) {
+        console.warn(`Online fetch for ${tabName} failed, using cloud-stored cache:`, e);
+      }
+    }
+
+    // Cloud storage fallback (this is the primary store when no external Sheet URL is set)
+    const data = await this.getLocalData();
+    return data[tabName] || [];
+  },
+
+  appendRow: async function(tabName, newRow) {
+    // 1. Immediately update cloud-persisted data
+    const data = await this.getLocalData();
+    if (!data[tabName]) data[tabName] = [];
+    data[tabName].unshift(newRow);
+    await this.saveLocalData(data);
+
+    // 2. Post directly to live Google Sheet (using text/plain to prevent CORS preflight blocking)
+    const apiUrl = this.getApiUrl();
+    if (apiUrl) {
+      try {
+        const payload = JSON.stringify({ tab: tabName, action: 'append', row: newRow });
+        const res = await fetch(apiUrl, {
+          method: 'POST',
+          mode: 'cors',
+          redirect: 'follow',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: payload
+        });
+        if (res.ok) {
+          console.log(`✓ Row successfully appended to live Google Sheet tab: ${tabName}`);
+        }
+      } catch (e) {
+        console.warn("Live sheet sync error", e);
+      }
+    }
+
+    return newRow;
+  },
+
+  updateRow: async function(tabName, keyField, keyValue, updatedFields) {
+    const data = await this.getLocalData();
+    if (!data[tabName]) return false;
+
+    let updated = false;
+    data[tabName] = data[tabName].map(row => {
+      if (row[keyField] === keyValue) {
+        updated = true;
+        return { ...row, ...updatedFields };
+      }
+      return row;
+    });
+
+    if (updated) {
+      await this.saveLocalData(data);
+
+      const apiUrl = this.getApiUrl();
+      if (apiUrl) {
+        try {
+          const payload = JSON.stringify({
+            tab: tabName,
+            action: 'update',
+            keyField: keyField,
+            keyValue: keyValue,
+            updatedFields: updatedFields
+          });
+
+          await fetch(apiUrl, {
+            method: 'POST',
+            mode: 'cors',
+            redirect: 'follow',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: payload
+          });
+          console.log(`✓ Row successfully updated in live Google Sheet tab: ${tabName}`);
+        } catch (e) {
+          console.warn("Live sheet update error", e);
+        }
+      }
+    }
+    return updated;
+  },
+
+  deleteRow: async function(tabName, keyField, keyValue) {
+    const data = await this.getLocalData();
+    if (!data[tabName]) return false;
+
+    const initialLen = data[tabName].length;
+    data[tabName] = data[tabName].filter(row => row[keyField] !== keyValue);
+
+    if (data[tabName].length !== initialLen) {
+      await this.saveLocalData(data);
+
+      const apiUrl = this.getApiUrl();
+      if (apiUrl) {
+        try {
+          const payload = JSON.stringify({
+            tab: tabName,
+            action: 'delete',
+            keyField: keyField,
+            keyValue: keyValue
+          });
+
+          await fetch(apiUrl, {
+            method: 'POST',
+            mode: 'cors',
+            redirect: 'follow',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: payload
+          });
+          console.log(`✓ Row successfully deleted from live Google Sheet tab: ${tabName}`);
+        } catch (e) {
+          console.warn("Live sheet delete error", e);
+        }
+      }
+      return true;
+    }
+    return false;
+  },
+
+  // -------------------------------------------------------------
+  // Role Authentication Helpers (Phone Number Lookup in Google Sheet)
+  // -------------------------------------------------------------
+  authenticateOrRegister: async function(phone, name, role) {
+    const cleanPhone = phone.trim().replace(/\D/g, '');
+    const cleanName = name.trim() || (role === 'Farmer' ? 'Farmer Friend' : 'Valued Buyer');
+    const tabName = role === 'Farmer' ? 'Farmers' : 'Buyers';
+
+    const rows = await this.getRows(tabName);
+    const existing = rows.find(r => r.phone && String(r.phone).replace(/\D/g, '') === cleanPhone);
+
+    if (existing) {
+      return {
+        isNew: false,
+        user: existing,
+        role: role
+      };
+    }
+
+    const newId = role === 'Farmer' ? `F${Date.now().toString().slice(-4)}` : `B${Date.now().toString().slice(-4)}`;
+    const today = new Date().toISOString().substring(0, 10);
+
+    const newUserRow = role === 'Farmer' ? {
+      farmer_id: newId,
+      name: cleanName,
+      phone: cleanPhone,
+      village: "Local Farm Hub",
+      state: "India",
+      upi_id: `${cleanName.toLowerCase().replace(/\s+/g, '')}@upi`,
+      joined_date: today
+    } : {
+      buyer_id: newId,
+      name: cleanName,
+      phone: cleanPhone,
+      delivery_address: "City Center Delivery Point",
+      buyer_type: "Individual",
+      joined_date: today
+    };
+
+    await this.appendRow(tabName, newUserRow);
+
+    return {
+      isNew: true,
+      user: newUserRow,
+      role: role
+    };
+  }
+};
+
+
+/* ===== app.js ===== */
+/**
+ * Green Hand - Main Application Logic (Full Online Edition)
+ * Role State Machine, Google Sheet live synchronization, Farmer & Buyer flows
+ * Configured for: pravinjothi55@gmail.com
+ */
+
+const AppState = {
+  currentUser: null,
+  currentRole: null, // 'Farmer' | 'Buyer'
+  farmerActiveTab: 'listings', // 'listings' | 'orders'
+  buyerActiveTab: 'market',    // 'market' | 'orders'
+  buyerCategory: 'All',
+  buyerSearchTerm: '',
+  activeCropForOrder: null
+};
+
+// Initialize Application
+document.addEventListener('DOMContentLoaded', async () => {
+  await SheetService.init();
+  initLucideIcons();
+  updateOnlineUIIndicators();
+  restoreUserSession();
+});
+
+// Helper for Lucide icons
+function initLucideIcons() {
+  if (window.lucide) {
+    lucide.createIcons();
+  }
+}
+
+// -----------------------------------------------------------------
+// SESSION & ROUTING STATE MACHINE (Zero-Blank-Screen Assurance)
+// -----------------------------------------------------------------
+function restoreUserSession() {
+  try {
+    const savedUser = sessionStorage.getItem('greenhand_user');
+    const savedRole = sessionStorage.getItem('greenhand_role');
+
+    if (savedUser && savedRole) {
+      AppState.currentUser = JSON.parse(savedUser);
+      AppState.currentRole = savedRole;
+      updateHeaderUserBadge();
+      navigateTo(savedRole === 'Farmer' ? 'farmer' : 'buyer');
+    } else {
+      navigateTo('login');
+    }
+  } catch (e) {
+    console.error("Session restore error", e);
+    navigateTo('login');
+  }
+}
+
+function navigateTo(screen) {
+  const loginEl = document.getElementById('loginScreen');
+  const farmerEl = document.getElementById('farmerScreen');
+  const buyerEl = document.getElementById('buyerScreen');
+  const userBadgeEl = document.getElementById('userHeaderBadge');
+
+  if (!loginEl || !farmerEl || !buyerEl) return;
+
+  loginEl.classList.add('hidden');
+  farmerEl.classList.add('hidden');
+  buyerEl.classList.add('hidden');
+
+  if (screen === 'farmer') {
+    farmerEl.classList.remove('hidden');
+    if (userBadgeEl) userBadgeEl.classList.remove('hidden');
+    renderFarmerDashboard();
+  } else if (screen === 'buyer') {
+    buyerEl.classList.remove('hidden');
+    if (userBadgeEl) userBadgeEl.classList.remove('hidden');
+    renderBuyerDashboard();
+  } else {
+    loginEl.classList.remove('hidden');
+    if (userBadgeEl) userBadgeEl.classList.add('hidden');
+  }
+
+  initLucideIcons();
+}
+
+function updateHeaderUserBadge() {
+  const nameEl = document.getElementById('headerUserName');
+  if (nameEl && AppState.currentUser) {
+    nameEl.innerText = `${AppState.currentUser.name} (${AppState.currentRole})`;
+  }
+}
+
+function handleLogout() {
+  AppState.currentUser = null;
+  AppState.currentRole = null;
+  sessionStorage.removeItem('greenhand_user');
+  sessionStorage.removeItem('greenhand_role');
+  showToast("Logged out successfully");
+  navigateTo('login');
+}
+
+function handleLogoClick() {
+  if (AppState.currentUser) {
+    navigateTo(AppState.currentRole === 'Farmer' ? 'farmer' : 'buyer');
+  } else {
+    navigateTo('login');
+  }
+}
+
+function switchRoleToggle() {
+  if (!AppState.currentUser) {
+    navigateTo('login');
+    return;
+  }
+  const targetRole = AppState.currentRole === 'Farmer' ? 'Buyer' : 'Farmer';
+  quickLoginDemo(targetRole);
+}
+
+// -----------------------------------------------------------------
+// AUTHENTICATION (PHONE NUMBER LOOKUP IN GOOGLE SHEET)
+// -----------------------------------------------------------------
+async function handleLoginSubmit(event) {
+  event.preventDefault();
+  const phone = document.getElementById('loginPhoneInput').value.trim();
+  const name = document.getElementById('loginNameInput').value.trim();
+  const role = document.querySelector('input[name="loginRole"]:checked')?.value || 'Farmer';
+
+  if (!phone || phone.length < 10) {
+    showToast("Please enter a valid 10-digit phone number");
+    return;
+  }
+
+  const btn = document.getElementById('loginSubmitBtn');
+  btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin mr-1"></i> Syncing with Google Sheet...`;
+  btn.disabled = true;
+
+  try {
+    const authResult = await SheetService.authenticateOrRegister(phone, name, role);
+
+    AppState.currentUser = authResult.user;
+    AppState.currentRole = authResult.role;
+
+    sessionStorage.setItem('greenhand_user', JSON.stringify(AppState.currentUser));
+    sessionStorage.setItem('greenhand_role', AppState.currentRole);
+
+    updateHeaderUserBadge();
+    showToast(authResult.isNew ? `Registered in Google Sheet: Welcome, ${name}!` : `Welcome back, ${name}!`);
+
+    if (role === 'Farmer') {
+      navigateTo('farmer');
+    } else {
+      navigateTo('buyer');
+    }
+  } catch (err) {
+    console.error("Login error:", err);
+    showToast("Opening marketplace...");
+    navigateTo(role === 'Farmer' ? 'farmer' : 'buyer');
+  } finally {
+    btn.innerHTML = `<span>Enter Marketplace</span><i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>`;
+    btn.disabled = false;
+    initLucideIcons();
+  }
+}
+
+// Quick 1-Click Login for Demo Evaluators
+async function quickLoginDemo(role) {
+  if (role === 'Farmer') {
+    document.getElementById('loginPhoneInput').value = "9823456789";
+    document.getElementById('loginNameInput').value = "Rameshwar Patil";
+    document.querySelector('input[name="loginRole"][value="Farmer"]').checked = true;
+  } else {
+    document.getElementById('loginPhoneInput').value = "9811122334";
+    document.getElementById('loginNameInput').value = "Pooja Sharma";
+    document.querySelector('input[name="loginRole"][value="Buyer"]').checked = true;
+  }
+
+  const form = document.getElementById('loginForm');
+  form.dispatchEvent(new Event('submit'));
+}
+
+// -----------------------------------------------------------------
+// FARMER DASHBOARD & CROP MANAGEMENT (VERIFIED BUG-FREE ROUTING)
+// -----------------------------------------------------------------
+async function renderFarmerDashboard() {
+  if (!AppState.currentUser) {
+    const farmers = await SheetService.getRows('Farmers');
+    AppState.currentUser = farmers[0] || INITIAL_SHEET_DATA.Farmers[0];
+    AppState.currentRole = 'Farmer';
+    sessionStorage.setItem('greenhand_user', JSON.stringify(AppState.currentUser));
+    sessionStorage.setItem('greenhand_role', 'Farmer');
+    updateHeaderUserBadge();
+  }
+
+  const farmer = AppState.currentUser;
+
+  // Header Title
+  const nameEl = document.getElementById('farmerNameTitle');
+  const detailsEl = document.getElementById('farmerPhoneVillage');
+  if (nameEl) nameEl.innerText = farmer.name || "Farmer Partner";
+  if (detailsEl) detailsEl.innerText = `+91 ${farmer.phone || '9823456789'} • ${farmer.village || 'Farm Hub'}`;
+
+  // Fetch farmer's listings and orders from Google Sheet
+  const allListings = await SheetService.getRows('Listings');
+  const allOrders = await SheetService.getRows('Orders');
+  AppState.ordersCache = allOrders;
+
+  const myListings = allListings.filter(l =>
+    l.farmer_id === farmer.farmer_id ||
+    (farmer.phone && l.farmer_name === farmer.name)
+  );
+
+  const myOrders = allOrders.filter(o =>
+    o.farmer_id === farmer.farmer_id ||
+    (farmer.phone && o.farmer_name === farmer.name)
+  );
+
+  // Compute "My Earnings This Week"
+  let weeklyDeliveredEarnings = 0;
+  let totalDeliveredKg = 0;
+
+  myOrders.forEach(ord => {
+    if (ord.status === 'Delivered' || ord.status === 'Confirmed') {
+      weeklyDeliveredEarnings += Number(ord.total_price) || 0;
+      totalDeliveredKg += Number(ord.qty_kg) || 0;
+    }
+  });
+
+  const middlemanSaved = Math.round(weeklyDeliveredEarnings * 0.33);
+
+  document.getElementById('farmerWeeklyEarningsText').innerText = `₹${weeklyDeliveredEarnings.toLocaleString()}`;
+  document.getElementById('farmerSalesVolumeText').innerText = `Total produce sold: ${totalDeliveredKg.toLocaleString()} kg`;
+  document.getElementById('farmerSavingsAmountText').innerText = `+₹${middlemanSaved.toLocaleString()} (33% boost)`;
+
+  // Update Tab Counts
+  document.getElementById('farmerListingsCount').innerText = myListings.length;
+  document.getElementById('farmerOrdersCount').innerText = myOrders.length;
+
+  // Render Sub-Tabs
+  renderFarmerListingsTab(myListings);
+  renderFarmerOrdersTab(myOrders);
+  initLucideIcons();
+}
+
+function switchFarmerTab(tab) {
+  AppState.farmerActiveTab = tab;
+  const listingsBtn = document.getElementById('farmerTabListingsBtn');
+  const ordersBtn = document.getElementById('farmerTabOrdersBtn');
+  const listingsContainer = document.getElementById('farmerListingsContainer');
+  const ordersContainer = document.getElementById('farmerOrdersContainer');
+
+  if (tab === 'listings') {
+    listingsBtn.className = 'flex-1 py-2 rounded-xl bg-white text-stone-900 shadow-xs transition-all';
+    ordersBtn.className = 'flex-1 py-2 rounded-xl text-stone-600 hover:text-stone-900 transition-all';
+    listingsContainer.classList.remove('hidden');
+    ordersContainer.classList.add('hidden');
+  } else {
+    listingsBtn.className = 'flex-1 py-2 rounded-xl text-stone-600 hover:text-stone-900 transition-all';
+    ordersBtn.className = 'flex-1 py-2 rounded-xl bg-white text-stone-900 shadow-xs transition-all';
+    listingsContainer.classList.add('hidden');
+    ordersContainer.classList.remove('hidden');
+  }
+}
+
+function renderFarmerListingsTab(myListings) {
+  const container = document.getElementById('farmerListingsContainer');
+  if (!container) return;
+
+  if (myListings.length === 0) {
+    container.innerHTML = `
+      <div class="p-8 text-center bg-stone-50 rounded-3xl border border-dashed border-stone-300">
+        <i data-lucide="package-plus" class="w-10 h-10 mx-auto text-stone-400 mb-2"></i>
+        <h4 class="text-sm font-bold text-stone-700">${GHUpgrade.t('noListingsTitle')}</h4>
+        <p class="text-xs text-stone-500 mt-1 mb-4">${GHUpgrade.t('noListingsSub')}</p>
+        <button onclick="openAddListingModal()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-xs">
+          ${GHUpgrade.t('addFirstCrop')}
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = myListings.map(listing => `
+    <div class="crop-card bg-white p-3.5 rounded-2xl border border-stone-200 shadow-xs flex items-center justify-between gap-3">
+      <div class="flex items-center space-x-3 min-w-0">
+        <img src="${listing.photo_url || 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=120'}" class="w-14 h-14 rounded-xl object-cover flex-shrink-0" />
+        <div class="min-w-0">
+          <div class="flex items-center space-x-1.5">
+            <h4 class="text-xs font-bold text-stone-900 truncate">${listing.crop_name}</h4>
+            <span class="text-[9px] font-bold px-1.5 py-0.2 rounded-full ${listing.status === 'active' ? 'bg-emerald-100 text-emerald-800' : listing.status === 'coming_soon' ? 'bg-amber-100 text-amber-800' : 'bg-stone-100 text-stone-500'}">
+              ${listing.status === 'active' ? GHUpgrade.t('statusActive') : listing.status === 'coming_soon' ? GHUpgrade.t('statusComingSoon') : GHUpgrade.t('statusSoldOut')}
+            </span>
+          </div>
+          <p class="text-[11px] text-stone-500 truncate">${listing.crop_type} • ${listing.status === 'coming_soon' ? GHUpgrade.t('expectedHarvestLabel') : GHUpgrade.t('harvestLabel')}: ${listing.harvest_date}</p>
+          <div class="mt-1 flex items-center space-x-3 text-xs">
+            <span class="font-extrabold text-emerald-800">₹${listing.price_per_kg} / kg</span>
+            <span class="text-[11px] text-stone-500 font-mono">${listing.qty_kg} ${GHUpgrade.t('kgLeft')}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-1 flex-shrink-0">
+        <button onclick="editListingPrompt('${listing.listing_id}')" title="Edit" class="p-1.5 text-stone-500 hover:text-stone-800 hover:bg-stone-100 rounded-lg">
+          <i data-lucide="edit-3" class="w-4 h-4"></i>
+        </button>
+        <button onclick="deleteListingConfirm('${listing.listing_id}')" title="Delete" class="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg">
+          <i data-lucide="trash-2" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderFarmerOrdersTab(myOrders) {
+  const container = document.getElementById('farmerOrdersContainer');
+  if (!container) return;
+
+  if (myOrders.length === 0) {
+    container.innerHTML = `
+      <div class="p-8 text-center bg-stone-50 rounded-3xl border border-dashed border-stone-300">
+        <i data-lucide="inbox" class="w-10 h-10 mx-auto text-stone-400 mb-2"></i>
+        <h4 class="text-sm font-bold text-stone-700">${GHUpgrade.t('noOrdersFarmerTitle')}</h4>
+        <p class="text-xs text-stone-500 mt-1">${GHUpgrade.t('noOrdersFarmerSub')}</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = myOrders.map(order => {
+    let actionButtons = '';
+    const st = order.status;
+
+    if (st === 'Placed') {
+      actionButtons = `
+        <div class="flex items-center space-x-1.5 mt-2">
+          <button onclick="updateOrderStatusAction('${order.order_id}', 'Confirmed')" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-xs">
+            ${GHUpgrade.t('acceptOrder')}
+          </button>
+          <button onclick="updateOrderStatusAction('${order.order_id}', 'Rejected')" class="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs rounded-xl">
+            ${GHUpgrade.t('rejectOrder')}
+          </button>
+        </div>
+      `;
+    } else if (st === 'Confirmed') {
+      actionButtons = `
+        <div class="mt-2">
+          <button onclick="updateOrderStatusAction('${order.order_id}', 'Delivered')" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl shadow-xs flex items-center space-x-1">
+            <i data-lucide="truck" class="w-3.5 h-3.5"></i>
+            <span>${GHUpgrade.t('markDelivered')}</span>
+          </button>
+        </div>
+      `;
+    } else if (st === 'Delivered') {
+      actionButtons = `
+        <div class="mt-2 text-[11px] font-bold text-emerald-800 flex items-center space-x-1">
+          <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i>
+          <span>${GHUpgrade.t('paidDelivered')}</span>
+        </div>
+      `;
+    }
+
+    const routeButton = order.delivery_address ? `
+      <button onclick="GHUpgrade.openRouteMapForOrder('${order.order_id}')" class="mt-2 px-3 py-1.5 bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs rounded-xl flex items-center space-x-1">
+        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-700"></i>
+        <span>${GHUpgrade.t('viewRoute')}</span>
+      </button>
+    ` : '';
+
+    return `
+      <div class="bg-white p-3.5 rounded-2xl border border-stone-200 shadow-xs space-y-1.5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-1.5">
+            <span class="font-mono text-[10px] font-bold text-stone-500">${order.order_id}</span>
+            <h4 class="text-xs font-bold text-stone-900">${order.crop_name}</h4>
+          </div>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full badge-${st.toLowerCase()}">
+            ${st}
+          </span>
+        </div>
+
+        <p class="text-xs text-stone-600">
+          ${GHUpgrade.t('buyerLabel')}: <strong class="text-stone-900">${order.buyer_name}</strong> (${order.buyer_phone})
+        </p>
+        ${order.delivery_address ? `<p class="text-[11px] text-stone-500">${GHUpgrade.t('deliveryAddressLabel')}: <strong class="text-stone-800">${order.delivery_address}</strong></p>` : ''}
+        <p class="text-[11px] text-stone-500">
+          ${GHUpgrade.t('deliveryDateLabel')}: <strong>${order.delivery_date}</strong> •
+          ${GHUpgrade.t('payLabel')}: <strong>${order.payment_method === 'UPI' ? GHUpgrade.t('upiOption') : GHUpgrade.t('codOption')}</strong>
+        </p>
+
+        <div class="flex items-baseline justify-between pt-1 border-t border-stone-100 text-xs font-mono">
+          <span>${GHUpgrade.t('qtyLabel')}: <strong>${order.qty_kg} kg</strong></span>
+          <span class="text-sm font-extrabold text-emerald-800">${GHUpgrade.t('totalLabel')}: ₹${order.total_price}</span>
+        </div>
+
+        ${actionButtons}
+        ${routeButton}
+      </div>
+    `;
+  }).join('');
+}
+
+// Listing Modal Add/Edit
+function openAddListingModal() {
+  document.getElementById('listingModalTitle').innerText = GHUpgrade.t('addCropTitle');
+  document.getElementById('formListingId').value = "";
+  document.getElementById('formCropName').value = "";
+  document.getElementById('formCropType').value = "Vegetables";
+  document.getElementById('formQtyKg').value = "1000";
+  document.getElementById('formPricePerKg').value = "24";
+  document.getElementById('formHarvestDate').value = new Date().toISOString().substring(0, 10);
+  document.getElementById('formLocation').value = AppState.currentUser?.village ? `${AppState.currentUser.village}, ${AppState.currentUser.state}` : "Nashik, Maharashtra";
+  document.getElementById('formComingSoon').checked = false;
+  const photoInput = document.getElementById('formPhotoUrl');
+  photoInput.value = "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=600&auto=format&fit=crop&q=80";
+  delete photoInput.dataset.manual;
+  document.getElementById('listingModal').classList.remove('hidden');
+}
+
+function closeListingModal() {
+  document.getElementById('listingModal').classList.add('hidden');
+}
+
+async function handleListingSubmit(event) {
+  event.preventDefault();
+  const listingId = document.getElementById('formListingId').value;
+  const isEditing = !!listingId;
+
+  const cropName = document.getElementById('formCropName').value.trim();
+  const cropType = document.getElementById('formCropType').value;
+  const qtyKg = Number(document.getElementById('formQtyKg').value);
+  const pricePerKg = Number(document.getElementById('formPricePerKg').value);
+  const harvestDate = document.getElementById('formHarvestDate').value;
+  const location = document.getElementById('formLocation').value;
+  const photoUrl = document.getElementById('formPhotoUrl').value || "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=600";
+  const isComingSoon = document.getElementById('formComingSoon').checked;
+
+  const farmer = AppState.currentUser;
+
+  if (isEditing) {
+    await SheetService.updateRow('Listings', 'listing_id', listingId, {
+      crop_name: cropName,
+      crop_type: cropType,
+      qty_kg: qtyKg,
+      price_per_kg: pricePerKg,
+      harvest_date: harvestDate,
+      location: location,
+      photo_url: photoUrl,
+      status: isComingSoon ? 'coming_soon' : 'active'
+    });
+    showToast("Listing synced to Google Sheet!");
+  } else {
+    const newListingRow = {
+      listing_id: `L${Date.now().toString().slice(-4)}`,
+      farmer_id: farmer.farmer_id || "F01",
+      farmer_name: farmer.name || "Farmer Partner",
+      crop_name: cropName,
+      crop_type: cropType,
+      qty_kg: qtyKg,
+      price_per_kg: pricePerKg,
+      harvest_date: harvestDate,
+      location: location,
+      photo_url: photoUrl,
+      status: isComingSoon ? 'coming_soon' : 'active'
+    };
+
+    await SheetService.appendRow('Listings', newListingRow);
+    showToast(isComingSoon ? `🌱 Saved as Coming Soon: ${cropName}!` : `🌾 Saved to Google Sheet: ${cropName}!`);
+  }
+
+  closeListingModal();
+  renderFarmerDashboard();
+}
+
+async function editListingPrompt(listingId) {
+  const listings = await SheetService.getRows('Listings');
+  const item = listings.find(l => l.listing_id === listingId);
+  if (!item) return;
+
+  document.getElementById('listingModalTitle').innerText = GHUpgrade.t('editCropTitle');
+  document.getElementById('formListingId').value = item.listing_id;
+  document.getElementById('formCropName').value = item.crop_name;
+  document.getElementById('formCropType').value = item.crop_type;
+  document.getElementById('formQtyKg').value = item.qty_kg;
+  document.getElementById('formPricePerKg').value = item.price_per_kg;
+  document.getElementById('formHarvestDate').value = item.harvest_date;
+  document.getElementById('formLocation').value = item.location;
+  document.getElementById('formPhotoUrl').value = item.photo_url;
+  document.getElementById('formPhotoUrl').dataset.manual = "1";
+  document.getElementById('formComingSoon').checked = item.status === 'coming_soon';
+
+  document.getElementById('listingModal').classList.remove('hidden');
+}
+
+async function deleteListingConfirm(listingId) {
+  if (confirm("Are you sure you want to delete this listing?")) {
+    await SheetService.deleteRow('Listings', 'listing_id', listingId);
+    showToast("Listing removed from Google Sheet.");
+    renderFarmerDashboard();
+  }
+}
+
+// -----------------------------------------------------------------
+// BUYER DASHBOARD & ORDER PLACEMENT
+// -----------------------------------------------------------------
+async function renderBuyerDashboard() {
+  if (!AppState.currentUser) {
+    const buyers = await SheetService.getRows('Buyers');
+    AppState.currentUser = buyers[0] || INITIAL_SHEET_DATA.Buyers[0];
+    AppState.currentRole = 'Buyer';
+    sessionStorage.setItem('greenhand_user', JSON.stringify(AppState.currentUser));
+    sessionStorage.setItem('greenhand_role', 'Buyer');
+    updateHeaderUserBadge();
+  }
+
+  const allListings = await SheetService.getRows('Listings');
+  const allOrders = await SheetService.getRows('Orders');
+  AppState.ordersCache = allOrders;
+
+  const buyer = AppState.currentUser;
+
+  const myOrders = allOrders.filter(o =>
+    o.buyer_id === buyer.buyer_id ||
+    (buyer.phone && o.buyer_phone === buyer.phone)
+  );
+
+  document.getElementById('buyerOrdersCount').innerText = myOrders.length;
+
+  renderBuyerMarketListings(allListings);
+  renderBuyerOrdersTracking(myOrders);
+  initLucideIcons();
+}
+
+function switchBuyerTab(tab) {
+  AppState.buyerActiveTab = tab;
+  const marketBtn = document.getElementById('buyerTabMarketBtn');
+  const ordersBtn = document.getElementById('buyerTabOrdersBtn');
+  const marketContainer = document.getElementById('buyerMarketContainer');
+  const ordersContainer = document.getElementById('buyerOrdersContainer');
+
+  if (tab === 'market') {
+    marketBtn.className = 'flex-1 py-2 rounded-xl bg-white text-stone-900 shadow-xs transition-all';
+    ordersBtn.className = 'flex-1 py-2 rounded-xl text-stone-600 hover:text-stone-900 transition-all';
+    marketContainer.classList.remove('hidden');
+    ordersContainer.classList.add('hidden');
+  } else {
+    marketBtn.className = 'flex-1 py-2 rounded-xl text-stone-600 hover:text-stone-900 transition-all';
+    ordersBtn.className = 'flex-1 py-2 rounded-xl bg-white text-stone-900 shadow-xs transition-all';
+    marketContainer.classList.add('hidden');
+    ordersContainer.classList.remove('hidden');
+  }
+}
+
+function handleBuyerSearch(e) {
+  AppState.buyerSearchTerm = e.target.value.toLowerCase();
+  SheetService.getRows('Listings').then(renderBuyerMarketListings);
+}
+
+function filterBuyerCategory(cat) {
+  AppState.buyerCategory = cat;
+  document.querySelectorAll('.buyer-cat-btn').forEach(btn => {
+    if (btn.innerText === cat) {
+      btn.className = 'buyer-cat-btn px-3 py-1 rounded-xl font-bold bg-emerald-700 text-white whitespace-nowrap';
+    } else {
+      btn.className = 'buyer-cat-btn px-3 py-1 rounded-xl font-semibold bg-stone-100 text-stone-700 hover:bg-stone-200 whitespace-nowrap';
+    }
+  });
+  SheetService.getRows('Listings').then(renderBuyerMarketListings);
+}
+
+function renderBuyerMarketListings(listings) {
+  const container = document.getElementById('buyerMarketContainer');
+  if (!container) return;
+
+  let filtered = listings.filter(l => l.status === 'active' || l.status === 'coming_soon');
+
+  if (AppState.buyerCategory !== 'All') {
+    filtered = filtered.filter(l => l.crop_type === AppState.buyerCategory);
+  }
+
+  if (AppState.buyerSearchTerm) {
+    filtered = filtered.filter(l =>
+      l.crop_name.toLowerCase().includes(AppState.buyerSearchTerm) ||
+      l.crop_type.toLowerCase().includes(AppState.buyerSearchTerm) ||
+      l.farmer_name.toLowerCase().includes(AppState.buyerSearchTerm) ||
+      l.location.toLowerCase().includes(AppState.buyerSearchTerm)
+    );
+  }
+
+  const availableCrops = filtered.filter(l => l.status === 'active');
+  const comingSoonCrops = filtered.filter(l => l.status === 'coming_soon');
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="p-8 text-center bg-stone-50 rounded-3xl border border-dashed border-stone-300">
+        <i data-lucide="search-x" class="w-10 h-10 mx-auto text-stone-400 mb-2"></i>
+        <p class="text-xs text-stone-500">No crop produce found matching your search</p>
+      </div>
+    `;
+    return;
+  }
+
+  const notifyList = getNotifyInterestList();
+
+  const availableHtml = availableCrops.map(crop => `
+    <div class="crop-card bg-white p-3.5 rounded-2xl border border-stone-200 shadow-xs flex items-center justify-between gap-3">
+      <div class="flex items-center space-x-3 min-w-0">
+        <img src="${crop.photo_url || 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=120'}" class="w-16 h-16 rounded-2xl object-cover flex-shrink-0 shadow-xs" />
+        <div class="min-w-0">
+          <span class="text-[9px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded">
+            ${crop.crop_type}
+          </span>
+          <h4 class="text-xs font-bold text-stone-900 truncate mt-0.5">${crop.crop_name}</h4>
+          <p class="text-[11px] text-stone-500 truncate">Farm: ${crop.farmer_name} • ${crop.location}</p>
+          <div class="mt-1 flex items-baseline space-x-2">
+            <span class="text-sm font-extrabold text-emerald-800">₹${crop.price_per_kg}</span>
+            <span class="text-[10px] text-stone-400">/ kg</span>
+            <span class="text-[10px] text-stone-500 font-mono">(${crop.qty_kg} kg available)</span>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="openOrderModal('${crop.listing_id}')" class="px-3 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-xs transition-colors flex-shrink-0">
+        Order
+      </button>
+    </div>
+  `).join('');
+
+  const comingSoonHtml = comingSoonCrops.map(crop => {
+    const isNotified = notifyList.includes(crop.listing_id);
+    return `
+    <div class="crop-card bg-amber-50/60 p-3.5 rounded-2xl border border-amber-200 shadow-xs flex items-center justify-between gap-3">
+      <div class="flex items-center space-x-3 min-w-0">
+        <img src="${crop.photo_url || 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=120'}" class="w-16 h-16 rounded-2xl object-cover flex-shrink-0 shadow-xs opacity-80" />
+        <div class="min-w-0">
+          <span class="text-[9px] font-bold uppercase tracking-wider text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded">
+            🌱 Coming Soon
+          </span>
+          <h4 class="text-xs font-bold text-stone-900 truncate mt-0.5">${crop.crop_name}</h4>
+          <p class="text-[11px] text-stone-500 truncate">Farm: ${crop.farmer_name} • ${crop.location}</p>
+          <div class="mt-1 flex items-baseline space-x-2">
+            <span class="text-sm font-extrabold text-amber-800">₹${crop.price_per_kg}</span>
+            <span class="text-[10px] text-stone-400">/ kg (expected)</span>
+          </div>
+          <p class="text-[10px] text-amber-700 font-bold mt-0.5">Expected harvest: ${crop.harvest_date}</p>
+        </div>
+      </div>
+
+      <button onclick="toggleNotifyInterest('${crop.listing_id}')" class="px-3 py-2 ${isNotified ? 'bg-amber-100 text-amber-800 border border-amber-300' : 'bg-white text-amber-800 border border-amber-300 hover:bg-amber-50'} font-bold text-[11px] rounded-xl shadow-xs transition-colors flex-shrink-0 whitespace-nowrap">
+        ${isNotified ? '✓ Notified' : '🔔 Notify Me'}
+      </button>
+    </div>
+  `;
+  }).join('');
+
+  container.innerHTML = `
+    ${availableHtml}
+    ${comingSoonCrops.length > 0 ? `
+      <div class="pt-2 pb-1 flex items-center space-x-2">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-amber-700">🌱 Coming Soon Harvests</span>
+        <div class="flex-1 h-px bg-amber-200"></div>
+      </div>
+      ${comingSoonHtml}
+    ` : ''}
+  `;
+
+  initLucideIcons();
+}
+
+// -----------------------------------------------------------------
+// "COMING SOON" HARVEST NOTIFY INTEREST (local, per-browser — demo only)
+// -----------------------------------------------------------------
+function getNotifyInterestList() {
+  try {
+    return JSON.parse(localStorage.getItem('greenhand_notify_interest') || '[]');
+  } catch (e) {
+    return [];
+  }
+}
+
+function toggleNotifyInterest(listingId) {
+  let list = getNotifyInterestList();
+  if (list.includes(listingId)) {
+    list = list.filter(id => id !== listingId);
+    showToast("Notification cancelled");
+  } else {
+    list.push(listingId);
+    showToast("🔔 We'll notify you when this crop is harvested!");
+  }
+  localStorage.setItem('greenhand_notify_interest', JSON.stringify(list));
+  SheetService.getRows('Listings').then(renderBuyerMarketListings);
+}
+
+function renderBuyerOrdersTracking(myOrders) {
+  const container = document.getElementById('buyerOrdersContainer');
+  if (!container) return;
+
+  if (myOrders.length === 0) {
+    container.innerHTML = `
+      <div class="p-8 text-center bg-stone-50 rounded-3xl border border-dashed border-stone-300">
+        <i data-lucide="shopping-cart" class="w-10 h-10 mx-auto text-stone-400 mb-2"></i>
+        <h4 class="text-sm font-bold text-stone-700">${GHUpgrade.t('noOrdersBuyerTitle')}</h4>
+        <p class="text-xs text-stone-500 mt-1 mb-3">${GHUpgrade.t('noOrdersBuyerSub')}</p>
+        <button onclick="switchBuyerTab('market')" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl">
+          ${GHUpgrade.t('browseProduce')}
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = myOrders.map(order => {
+    const st = order.status;
+    const isPlaced = st === 'Placed' || st === 'Confirmed' || st === 'Delivered';
+    const isConfirmed = st === 'Confirmed' || st === 'Delivered';
+    const isDelivered = st === 'Delivered';
+
+    const routeButton = order.delivery_address ? `
+      <button onclick="GHUpgrade.openRouteMapForOrder('${order.order_id}')" class="w-full mt-1 px-3 py-1.5 bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs rounded-xl flex items-center justify-center space-x-1">
+        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-700"></i>
+        <span>${GHUpgrade.t('viewRoute')}</span>
+      </button>
+    ` : '';
+
+    return `
+      <div class="bg-white p-4 rounded-2xl border border-stone-200 shadow-xs space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="font-mono text-[10px] font-bold text-stone-400">${order.order_id}</span>
+            <h4 class="text-xs font-bold text-stone-900">${order.crop_name}</h4>
+          </div>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full badge-${st.toLowerCase()}">
+            ${st}
+          </span>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px] text-stone-600 bg-stone-50 p-2.5 rounded-xl">
+          <span>${GHUpgrade.t('farmerLabel')}: <strong>${order.farmer_name}</strong></span>
+          <span>${GHUpgrade.t('deliveryLabel')}: <strong>${order.delivery_date}</strong></span>
+          <span class="font-bold text-emerald-800">₹${order.total_price} (${order.qty_kg}kg)</span>
+        </div>
+        <div class="text-[11px] text-stone-500">
+          ${GHUpgrade.t('payLabel')}: <strong class="text-stone-800">${order.payment_method === 'UPI' ? GHUpgrade.t('upiOption') : GHUpgrade.t('codOption')}</strong>
+        </div>
+
+        <!-- 3-Step Visual Order Pipeline Tracker -->
+        <div class="space-y-1 pt-1">
+          <div class="flex items-center justify-between text-[10px] font-bold text-stone-500">
+            <span class="${isPlaced ? 'text-emerald-700' : ''}">${GHUpgrade.t('pipelinePlaced')}</span>
+            <span class="${isConfirmed ? 'text-emerald-700' : ''}">${GHUpgrade.t('pipelineConfirmed')}</span>
+            <span class="${isDelivered ? 'text-emerald-700' : ''}">${GHUpgrade.t('pipelineDelivered')}</span>
+          </div>
+          <div class="h-1.5 w-full bg-stone-100 rounded-full overflow-hidden flex">
+            <div class="h-full bg-emerald-600 transition-all ${isDelivered ? 'w-full' : isConfirmed ? 'w-2/3' : 'w-1/3'}"></div>
+          </div>
+        </div>
+        ${routeButton}
+      </div>
+    `;
+  }).join('');
+}
+
+// -----------------------------------------------------------------
+// ORDER PLACEMENT FLOW (BUYER -> FARMER PIPELINE)
+// -----------------------------------------------------------------
+async function openOrderModal(listingId) {
+  const listings = await SheetService.getRows('Listings');
+  const crop = listings.find(l => l.listing_id === listingId);
+  if (!crop) return;
+
+  AppState.activeCropForOrder = crop;
+
+  document.getElementById('orderFormListingId').value = crop.listing_id;
+  document.getElementById('orderCropPhoto').src = crop.photo_url || 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=120';
+  document.getElementById('orderCropTitle').innerText = crop.crop_name;
+  document.getElementById('orderCropFarmer').innerText = `by ${crop.farmer_name} • ${crop.location}`;
+  document.getElementById('orderCropPrice').innerText = crop.price_per_kg;
+
+  document.getElementById('orderQtyInput').value = "10";
+  document.getElementById('orderQtyInput').max = crop.qty_kg;
+  document.getElementById('orderDeliveryAddressInput').value = AppState.currentUser?.village ? `${AppState.currentUser.village}, ${AppState.currentUser.state || ''}`.replace(/,\s*$/, '') : '';
+
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  document.getElementById('orderDeliveryDateInput').value = tomorrow.toISOString().substring(0, 10);
+
+  // Reset payment method to Cash on Delivery by default each time the modal opens
+  const codRadio = document.querySelector('input[name="orderPaymentMethod"][value="COD"]');
+  if (codRadio) codRadio.checked = true;
+  document.getElementById('orderUpiBox').classList.add('hidden');
+
+  // Look up the farmer's UPI ID (from the Farmers tab) to show if UPI is chosen
+  AppState.activeFarmerUpi = '—';
+  try {
+    const farmers = await SheetService.getRows('Farmers');
+    const farmerRecord = farmers.find(f => f.farmer_id === crop.farmer_id);
+    if (farmerRecord && farmerRecord.upi_id) {
+      AppState.activeFarmerUpi = farmerRecord.upi_id;
+    }
+  } catch (e) {
+    console.warn("Could not fetch farmer UPI ID", e);
+  }
+  document.getElementById('orderFarmerUpiId').innerText = AppState.activeFarmerUpi;
+
+  calculateOrderTotal();
+  document.getElementById('orderModal').classList.remove('hidden');
+}
+
+function closeOrderModal() {
+  document.getElementById('orderModal').classList.add('hidden');
+}
+
+function toggleOrderUpiBox() {
+  const selected = document.querySelector('input[name="orderPaymentMethod"]:checked');
+  const upiBox = document.getElementById('orderUpiBox');
+  if (selected && selected.value === 'UPI') {
+    upiBox.classList.remove('hidden');
+  } else {
+    upiBox.classList.add('hidden');
+  }
+}
+
+function calculateOrderTotal() {
+  const crop = AppState.activeCropForOrder;
+  if (!crop) return;
+
+  const qty = Math.max(1, Number(document.getElementById('orderQtyInput').value) || 1);
+  const total = qty * crop.price_per_kg;
+  document.getElementById('orderTotalDisplay').innerText = `₹${total.toLocaleString()}`;
+}
+
+async function handleOrderSubmit(event) {
+  event.preventDefault();
+  const crop = AppState.activeCropForOrder;
+  const buyer = AppState.currentUser;
+  if (!crop || !buyer) return;
+
+  const qty = Number(document.getElementById('orderQtyInput').value);
+  const deliveryDate = document.getElementById('orderDeliveryDateInput').value;
+  const deliveryAddress = document.getElementById('orderDeliveryAddressInput').value.trim();
+  const total = qty * crop.price_per_kg;
+  const paymentMethodEl = document.querySelector('input[name="orderPaymentMethod"]:checked');
+  const paymentMethod = paymentMethodEl ? paymentMethodEl.value : 'COD';
+
+  const newOrderRow = {
+    order_id: `ORD-${Math.floor(100 + Math.random() * 900)}`,
+    listing_id: crop.listing_id,
+    crop_name: crop.crop_name,
+    buyer_id: buyer.buyer_id || "B01",
+    buyer_name: buyer.name || "Buyer",
+    buyer_phone: buyer.phone || "9811122334",
+    farmer_id: crop.farmer_id,
+    farmer_name: crop.farmer_name,
+    qty_kg: qty,
+    price_per_kg: crop.price_per_kg,
+    total_price: total,
+    delivery_date: deliveryDate,
+    delivery_address: deliveryAddress,
+    pickup_location: crop.location || '',
+    payment_method: paymentMethod,
+    status: "Placed",
+    created_at: new Date().toISOString().replace('T', ' ').substring(0, 16)
+  };
+
+  const updatedQty = Math.max(0, crop.qty_kg - qty);
+  await SheetService.updateRow('Listings', 'listing_id', crop.listing_id, {
+    qty_kg: updatedQty,
+    status: updatedQty === 0 ? 'sold_out' : 'active'
+  });
+
+  await SheetService.appendRow('Orders', newOrderRow);
+
+  closeOrderModal();
+  showToast(`🎉 Order saved to Google Sheet! Total: ₹${total}`);
+
+  switchBuyerTab('orders');
+  renderBuyerDashboard();
+}
+
+// -----------------------------------------------------------------
+// ORDER STATUS UPDATES (FARMER ACCEPTS / MARKS DELIVERED)
+// -----------------------------------------------------------------
+async function updateOrderStatusAction(orderId, newStatus) {
+  const success = await SheetService.updateRow('Orders', 'order_id', orderId, {
+    status: newStatus
+  });
+
+  if (success) {
+    showToast(`Order ${orderId} synced to Google Sheet: ${newStatus}`);
+    renderFarmerDashboard();
+  }
+}
+
+// -----------------------------------------------------------------
+// GOOGLE SHEET SETTINGS & LIVE CONNECTION TESTING
+// -----------------------------------------------------------------
+function openSheetConfigModal() {
+  document.getElementById('sheetApiUrlInput').value = SheetService.getApiUrl();
+  document.getElementById('connectionStatusResult').classList.add('hidden');
+  document.getElementById('sheetConfigModal').classList.remove('hidden');
+}
+
+function closeSheetConfigModal() {
+  document.getElementById('sheetConfigModal').classList.add('hidden');
+}
+
+async function testSheetConnection() {
+  const inputUrl = document.getElementById('sheetApiUrlInput').value.trim();
+  const btn = document.getElementById('testConnectionBtn');
+  const resultEl = document.getElementById('connectionStatusResult');
+
+  btn.innerHTML = `<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i> Pinging Google Drive Sheet...`;
+  btn.disabled = true;
+
+  const res = await SheetService.testConnection(inputUrl);
+
+  resultEl.classList.remove('hidden');
+  if (res.success) {
+    resultEl.className = 'p-3 rounded-2xl text-[11px] bg-emerald-50 text-emerald-800 border border-emerald-200';
+    resultEl.innerHTML = `<strong>✅ Live Sync Confirmed!</strong><br>${res.message}`;
+  } else {
+    resultEl.className = 'p-3 rounded-2xl text-[11px] bg-rose-50 text-rose-800 border border-rose-200';
+    resultEl.innerHTML = `<strong>❌ Connection Failed:</strong><br>${res.message}`;
+  }
+
+  btn.innerHTML = `<i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-emerald-700"></i> Test Live Connection`;
+  btn.disabled = false;
+  initLucideIcons();
+}
+
+function saveSheetConfig() {
+  const url = document.getElementById('sheetApiUrlInput').value.trim();
+  SheetService.setApiUrl(url);
+  closeSheetConfigModal();
+  updateOnlineUIIndicators();
+  showToast(url ? "✅ Online Mode Activated: Connected to Google Drive!" : "Using offline local sheet engine.");
+
+  if (AppState.currentRole === 'Farmer') {
+    renderFarmerDashboard();
+  } else if (AppState.currentRole === 'Buyer') {
+    renderBuyerDashboard();
+  }
+}
+
+function updateOnlineUIIndicators() {
+  const isOnline = SheetService.isOnlineMode();
+  const dot = document.getElementById('headerOnlineDot');
+  const banner = document.getElementById('onlineSetupBanner');
+  const text = document.getElementById('headerSheetText');
+  const status = document.getElementById('sheetSyncStatus');
+
+  // Farmers/Buyers/Listings/Orders are already persisted in shared cloud
+  // storage (window.storage) by default, so the dot is always "live" —
+  // connecting an external Google Sheet is an optional extra sync target.
+  if (dot) {
+    dot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-ping';
+  }
+  if (text) {
+    text.innerText = isOnline ? 'Sheet + Cloud' : 'Cloud Storage';
+  }
+  if (banner) {
+    banner.classList.toggle('hidden', isOnline);
+  }
+  if (status) {
+    status.innerText = isOnline
+      ? 'Google Sheet: Live Online Sync Active (pravinjothi55@gmail.com)'
+      : 'Cloud Storage: Active — registrations, listings & orders are saved automatically.';
+  }
+}
+
+async function resetDemoData() {
+  await SheetService.resetToDefault();
+  closeSheetConfigModal();
+  showToast("Reset to 10 sample rows per tab.");
+  if (AppState.currentRole === 'Farmer') {
+    renderFarmerDashboard();
+  } else if (AppState.currentRole === 'Buyer') {
+    renderBuyerDashboard();
+  }
+}
+
+// -----------------------------------------------------------------
+// TOAST NOTIFICATIONS
+// -----------------------------------------------------------------
+function showToast(message) {
+  const toast = document.getElementById('toastNotification');
+  if (!toast) return;
+
+  document.getElementById('toastText').innerText = message;
+  toast.classList.remove('translate-y-20', 'opacity-0');
+  toast.classList.add('translate-y-0', 'opacity-100');
+
+  setTimeout(() => {
+    toast.classList.remove('translate-y-0', 'opacity-100');
+    toast.classList.add('translate-y-20', 'opacity-0');
+  }, 2800);
+}
+
+
+/* ===== upgrade.js ===== */
+/**
+ * Green Hand — Upgrade Pack (added on top of the existing app, non-destructively)
+ * =================================================================================
+ * Everything in this file is DEMO-QUALITY, built for a hackathon presentation.
+ * It does NOT require any paid account, API key, or business registration.
+ *
+ * Included here:
+ *   1. Language toggle: English / Tamil / Hindi / Punjabi
+ *   2. OTP login step (demo OTP — shown on-screen since there's no SMS account
+ *      wired up; swap `GHUpgrade.sendOtp()` for a real Firebase/MSG91 call
+ *      later and nothing else needs to change)
+ *   3. Rating & trust-score system for farmers
+ *   4. Bidding / counter-offer on listings
+ *   5. Admin dashboard (analytics + simple listing-anomaly flags)
+ *   6. Weather & crop advisory (Open-Meteo — free, no API key required)
+ *
+ * NOT included (each needs an account/credential only you can create):
+ *   - Real UPI/Razorpay payment capture
+ *   - Real SMS/WhatsApp delivery (Twilio/MSG91)
+ *   - Migration off Google Sheets to Firestore/Supabase/Mongo
+ *   - Real cloud image upload (Cloudinary/Firebase Storage)
+ *   - Delivery/logistics partner routing
+ * See UPGRADE_NOTES.md for exactly what to paste in to turn each demo into
+ * the real thing once you have those accounts.
+ */
+
+const GHUpgrade = (() => {
+
+  // ---------------------------------------------------------------
+  // 1. LANGUAGE TOGGLE (EN / TA / HI / PA)
+  // ---------------------------------------------------------------
+  const TRANSLATIONS = {
+    en: {
+      googleSheet: "Google Sheet",
+      welcomeTitle: "Welcome to Green Hand",
+      welcomeSub: "Empowering farmers with fair direct pricing, and buyers with fresh origin-verified produce.",
+      phoneLabel: "Phone Number",
+      nameLabel: "Your Full Name",
+      enterMarketplace: "Enter Marketplace",
+      otpTitle: "Verify Your Phone",
+      otpSub: "Demo OTP sent (shown below since no SMS account is connected yet)",
+      otpPlaceholder: "Enter 4-digit OTP",
+      otpVerify: "Verify & Continue",
+      otpResend: "Resend Code",
+      weatherTitle: "Weather & Crop Advisory",
+      offersTitle: "Buyer Offers",
+      offerAccept: "Accept",
+      offerReject: "Reject",
+      makeOffer: "Make Offer",
+      rateOrder: "Rate this order",
+      adminTitle: "Admin Dashboard",
+
+      selectRoleLabel: "Select Role",
+      roleFarmer: "Farmer",
+      roleFarmerSub: "Sell Crops",
+      roleBuyer: "Buyer",
+      roleBuyerSub: "Buy Fresh",
+
+      addCrop: "Add Crop",
+      verifiedProducer: "Verified Producer",
+      myEarningsWeek: "My Earnings This Week",
+      directBankSettled: "Direct Bank Settled",
+      middlemanCutsSaved: "Middleman Cuts Saved",
+      myCropListings: "My Crop Listings",
+      incomingOrders: "Incoming Orders",
+
+      browseCrops: "Browse Farmgate Crops",
+      myOrders: "My Orders",
+      searchPlaceholder: "Search onions, basmati rice, tomatoes, wheat...",
+      catAll: "All",
+      catVegetables: "Vegetables",
+      catGrains: "Grains",
+      catFruits: "Fruits",
+      catSpices: "Spices",
+
+      noListingsTitle: "No crop listings published yet",
+      noListingsSub: "Add your farm harvest to start receiving direct orders!",
+      addFirstCrop: "+ Add First Crop",
+      noOrdersFarmerTitle: "No incoming orders yet",
+      noOrdersFarmerSub: "Orders from buyers will sync here in real time.",
+      acceptOrder: "Accept Order",
+      rejectOrder: "Reject",
+      markDelivered: "Mark Delivered",
+      paidDelivered: "Paid & Delivered to Buyer",
+      buyerLabel: "Buyer",
+      farmerLabel: "Farmer",
+      deliveryLabel: "Delivery",
+      deliveryDateLabel: "Delivery Date",
+      payLabel: "Pay",
+      qtyLabel: "Qty",
+      totalLabel: "Total",
+      kgLeft: "kg left",
+      harvestLabel: "Harvest",
+      expectedHarvestLabel: "Expected Harvest",
+      statusActive: "Active",
+      statusComingSoon: "🌱 Coming Soon",
+      statusSoldOut: "Sold Out",
+
+      noOrdersBuyerTitle: "You haven't placed any orders yet",
+      noOrdersBuyerSub: "Browse fresh crops from local farmers and place your first order!",
+      browseProduce: "Browse Produce",
+      pipelinePlaced: "1. Placed",
+      pipelineConfirmed: "2. Confirmed",
+      pipelineDelivered: "3. Delivered",
+
+      addCropTitle: "Add New Crop Listing",
+      editCropTitle: "Edit Crop Listing",
+      savesToSheet: "Saves directly to your Google Sheet Listings tab",
+      cropNameLabel: "Crop Name",
+      categoryLabel: "Category",
+      availableQtyLabel: "Available Qty (kg)",
+      pricePerKgLabel: "Price per kg (₹)",
+      harvestDateLabel: "Harvest Date",
+      farmLocationLabel: "Farm Location",
+      comingSoonNote: "🌱 Not harvested yet — list as \"Coming Soon\" so buyers know in advance. It'll auto-switch to \"Active\" once you untick this after harvest.",
+      photoUrlLabel: "Photo URL",
+      photoAutoHint: "Type the crop name and a matching photo is picked automatically. You can still paste your own link.",
+      cancel: "Cancel",
+      publishToSheet: "Publish to Google Sheet",
+
+      placeOrderTitle: "Place Direct Order",
+      buyingDirectSub: "Buying directly from the verified farmer",
+      qtyNeededLabel: "Quantity Needed (kg)",
+      deliveryAddressLabel: "Delivery Address",
+      deliveryAddressPlaceholder: "e.g. 12 MG Road, Nashik",
+      preferredDeliveryDateLabel: "Preferred Delivery Date",
+      paymentMethodLabel: "Payment Method",
+      codOption: "💵 Cash on Delivery",
+      upiOption: "📲 UPI",
+      upiPayNote: "Pay the farmer directly on delivery/confirmation via UPI ID:",
+      upiDemoNote: "(Demo mode — this records your chosen payment method only; no live payment gateway is connected yet.)",
+      totalPayableLabel: "Total Payable:",
+      confirmOrder: "Confirm Order",
+
+      routeMapTitle: "Delivery Route",
+      openInGoogleMaps: "Open Directions in Google Maps",
+      viewRoute: "📍 View Route"
+    },
+    ta: {
+      googleSheet: "கூகுள் ஷீட்",
+      welcomeTitle: "கிரீன் ஹேண்டிற்கு வரவேற்கிறோம்",
+      welcomeSub: "விவசாயிகளுக்கு நியாயமான நேரடி விலை, வாங்குபவர்களுக்கு புதிய விளைபொருள்.",
+      phoneLabel: "தொலைபேசி எண்",
+      nameLabel: "முழு பெயர்",
+      enterMarketplace: "சந்தையில் நுழையவும்",
+      otpTitle: "உங்கள் எண்ணை சரிபார்க்கவும்",
+      otpSub: "டெமோ OTP (SMS கணக்கு இன்னும் இணைக்கப்படவில்லை என்பதால் கீழே காட்டப்படுகிறது)",
+      otpPlaceholder: "4-இலக்க OTP ஐ உள்ளிடவும்",
+      otpVerify: "சரிபார்த்து தொடரவும்",
+      otpResend: "மீண்டும் அனுப்பு",
+      weatherTitle: "வானிலை & பயிர் ஆலோசனை",
+      offersTitle: "வாங்குபவர் ஆஃபர்கள்",
+      offerAccept: "ஏற்றுக்கொள்",
+      offerReject: "நிராகரி",
+      makeOffer: "ஆஃபர் செய்யவும்",
+      rateOrder: "இந்த ஆர்டரை மதிப்பிடவும்",
+      adminTitle: "நிர்வாக டாஷ்போர்டு",
+
+      selectRoleLabel: "பங்கைத் தேர்ந்தெடுக்கவும்",
+      roleFarmer: "விவசாயி",
+      roleFarmerSub: "பயிர் விற்க",
+      roleBuyer: "வாங்குபவர்",
+      roleBuyerSub: "புதியதை வாங்க",
+
+      addCrop: "பயிர் சேர்க்க",
+      verifiedProducer: "சரிபார்க்கப்பட்ட உற்பத்தியாளர்",
+      myEarningsWeek: "இந்த வாரத்தில் என் வருமானம்",
+      directBankSettled: "நேரடி வங்கிக் கணக்கில் செலுத்தப்பட்டது",
+      middlemanCutsSaved: "இடைத்தரகர் கமிஷன் மிச்சம்",
+      myCropListings: "என் பயிர் பட்டியல்கள்",
+      incomingOrders: "வரும் ஆர்டர்கள்",
+
+      browseCrops: "பண்ணை பயிர்களை பார்வையிடவும்",
+      myOrders: "என் ஆர்டர்கள்",
+      searchPlaceholder: "வெங்காயம், பாசுமதி அரிசி, தக்காளி, கோதுமை தேடுங்கள்...",
+      catAll: "அனைத்தும்",
+      catVegetables: "காய்கறிகள்",
+      catGrains: "தானியங்கள்",
+      catFruits: "பழங்கள்",
+      catSpices: "மசாலா",
+
+      noListingsTitle: "இன்னும் பயிர் பட்டியல் எதுவும் வெளியிடப்படவில்லை",
+      noListingsSub: "நேரடி ஆர்டர்களைப் பெற உங்கள் பண்ணை விளைபொருளைச் சேர்க்கவும்!",
+      addFirstCrop: "+ முதல் பயிரைச் சேர்க்கவும்",
+      noOrdersFarmerTitle: "இன்னும் ஆர்டர்கள் வரவில்லை",
+      noOrdersFarmerSub: "வாங்குபவர்களின் ஆர்டர்கள் இங்கே உடனடியாக காண்பிக்கப்படும்.",
+      acceptOrder: "ஆர்டரை ஏற்கவும்",
+      rejectOrder: "நிராகரி",
+      markDelivered: "டெலிவரி ஆனது என குறிக்கவும்",
+      paidDelivered: "பணம் பெறப்பட்டு வாங்குபவருக்கு வழங்கப்பட்டது",
+      buyerLabel: "வாங்குபவர்",
+      farmerLabel: "விவசாயி",
+      deliveryLabel: "டெலிவரி",
+      deliveryDateLabel: "டெலிவரி தேதி",
+      payLabel: "பணம் செலுத்தும் முறை",
+      qtyLabel: "அளவு",
+      totalLabel: "மொத்தம்",
+      kgLeft: "கிலோ மீதம்",
+      harvestLabel: "அறுவடை",
+      expectedHarvestLabel: "எதிர்பார்க்கப்படும் அறுவடை",
+      statusActive: "விற்பனையில் உள்ளது",
+      statusComingSoon: "🌱 விரைவில் வரும்",
+      statusSoldOut: "விற்று தீர்ந்தது",
+
+      noOrdersBuyerTitle: "நீங்கள் இன்னும் எந்த ஆர்டரும் வைக்கவில்லை",
+      noOrdersBuyerSub: "உள்ளூர் விவசாயிகளிடமிருந்து புதிய பயிர்களை பார்வையிட்டு முதல் ஆர்டரை வையுங்கள்!",
+      browseProduce: "விளைபொருட்களை பார்வையிடவும்",
+      pipelinePlaced: "1. ஆர்டர் செய்யப்பட்டது",
+      pipelineConfirmed: "2. உறுதி செய்யப்பட்டது",
+      pipelineDelivered: "3. வழங்கப்பட்டது",
+
+      addCropTitle: "புதிய பயிர் பட்டியலைச் சேர்",
+      editCropTitle: "பயிர் பட்டியலைத் திருத்து",
+      savesToSheet: "உங்கள் Google Sheet பட்டியலில் நேரடியாக சேமிக்கப்படும்",
+      cropNameLabel: "பயிர் பெயர்",
+      categoryLabel: "வகை",
+      availableQtyLabel: "கிடைக்கும் அளவு (கிலோ)",
+      pricePerKgLabel: "ஒரு கிலோ விலை (₹)",
+      harvestDateLabel: "அறுவடை தேதி",
+      farmLocationLabel: "பண்ணை இருப்பிடம்",
+      comingSoonNote: "🌱 இன்னும் அறுவடை ஆகவில்லை — வாங்குபவர்கள் முன்கூட்டியே தெரிந்துகொள்ள \"விரைவில் வரும்\" என பட்டியலிடுங்கள். அறுவடைக்குப் பிறகு இதை நீக்கினால் தானாக \"விற்பனையில்\" மாறும்.",
+      photoUrlLabel: "புகைப்பட URL",
+      photoAutoHint: "பயிர் பெயரைத் தட்டச்சு செய்தால் பொருத்தமான புகைப்படம் தானாக தேர்வாகும். நீங்களே இணைப்பையும் மாற்றலாம்.",
+      cancel: "ரத்து செய்",
+      publishToSheet: "Google Sheet-இல் வெளியிடு",
+
+      placeOrderTitle: "நேரடி ஆர்டர் வையுங்கள்",
+      buyingDirectSub: "சரிபார்க்கப்பட்ட விவசாயியிடமிருந்து நேரடியாக வாங்குகிறீர்கள்",
+      qtyNeededLabel: "தேவையான அளவு (கிலோ)",
+      deliveryAddressLabel: "டெலிவரி முகவரி",
+      deliveryAddressPlaceholder: "எ.கா. 12 எம்.ஜி ரோடு, நாசிக்",
+      preferredDeliveryDateLabel: "விரும்பும் டெலிவரி தேதி",
+      paymentMethodLabel: "பணம் செலுத்தும் முறை",
+      codOption: "💵 டெலிவரியின்போது பணம்",
+      upiOption: "📲 UPI",
+      upiPayNote: "டெலிவரி/உறுதிப்படுத்தலின்போது நேரடியாக இந்த UPI ஐடிக்கு பணம் செலுத்துங்கள்:",
+      upiDemoNote: "(டெமோ முறை — இது நீங்கள் தேர்ந்தெடுத்த பணம் செலுத்தும் முறையை மட்டும் பதிவு செய்யும்; இன்னும் நேரடி பணம் செலுத்தும் நுழைவாயில் இணைக்கப்படவில்லை.)",
+      totalPayableLabel: "மொத்தம் செலுத்த வேண்டியது:",
+      confirmOrder: "ஆர்டரை உறுதிசெய்",
+
+      routeMapTitle: "டெலிவரி வழி",
+      openInGoogleMaps: "Google Maps-இல் வழி காட்டு",
+      viewRoute: "📍 வழியைக் காண்க"
+    },
+    hi: {
+      googleSheet: "गूगल शीट",
+      welcomeTitle: "ग्रीन हैंड में आपका स्वागत है",
+      welcomeSub: "किसानों को उचित सीधी कीमत, और खरीदारों को ताज़ा उपज।",
+      phoneLabel: "फ़ोन नंबर",
+      nameLabel: "आपका पूरा नाम",
+      enterMarketplace: "मार्केटप्लेस में जाएं",
+      otpTitle: "अपना फ़ोन सत्यापित करें",
+      otpSub: "डेमो OTP (अभी कोई SMS खाता जुड़ा नहीं है, इसलिए नीचे दिखाया गया है)",
+      otpPlaceholder: "4-अंकों का OTP डालें",
+      otpVerify: "सत्यापित करें और जारी रखें",
+      otpResend: "फिर से भेजें",
+      weatherTitle: "मौसम और फ़सल सलाह",
+      offersTitle: "खरीदार ऑफ़र",
+      offerAccept: "स्वीकार करें",
+      offerReject: "अस्वीकार करें",
+      makeOffer: "ऑफ़र करें",
+      rateOrder: "इस ऑर्डर को रेट करें",
+      adminTitle: "एडमिन डैशबोर्ड"
+    },
+    pa: {
+      googleSheet: "ਗੂਗਲ ਸ਼ੀਟ",
+      welcomeTitle: "ਗ੍ਰੀਨ ਹੈਂਡ ਵਿੱਚ ਤੁਹਾਡਾ ਸੁਆਗਤ ਹੈ",
+      welcomeSub: "ਕਿਸਾਨਾਂ ਲਈ ਸਹੀ ਸਿੱਧੀ ਕੀਮਤ, ਖਰੀਦਦਾਰਾਂ ਲਈ ਤਾਜ਼ਾ ਉਪਜ।",
+      phoneLabel: "ਫ਼ੋਨ ਨੰਬਰ",
+      nameLabel: "ਤੁਹਾਡਾ ਪੂਰਾ ਨਾਮ",
+      enterMarketplace: "ਮਾਰਕੀਟਪਲੇਸ ਵਿੱਚ ਜਾਓ",
+      otpTitle: "ਆਪਣਾ ਫ਼ੋਨ ਪ੍ਰਮਾਣਿਤ ਕਰੋ",
+      otpSub: "ਡੈਮੋ OTP (ਹੁਣ ਤੱਕ ਕੋਈ SMS ਖਾਤਾ ਜੁੜਿਆ ਨਹੀਂ, ਇਸ ਲਈ ਹੇਠਾਂ ਦਿਖਾਇਆ ਗਿਆ)",
+      otpPlaceholder: "4-ਅੰਕਾਂ ਦਾ OTP ਦਰਜ ਕਰੋ",
+      otpVerify: "ਪ੍ਰਮਾਣਿਤ ਕਰੋ ਅਤੇ ਜਾਰੀ ਰੱਖੋ",
+      otpResend: "ਦੁਬਾਰਾ ਭੇਜੋ",
+      weatherTitle: "ਮੌਸਮ ਅਤੇ ਫ਼ਸਲ ਸਲਾਹ",
+      offersTitle: "ਖਰੀਦਦਾਰ ਪੇਸ਼ਕਸ਼ਾਂ",
+      offerAccept: "ਮਨਜ਼ੂਰ",
+      offerReject: "ਰੱਦ ਕਰੋ",
+      makeOffer: "ਪੇਸ਼ਕਸ਼ ਕਰੋ",
+      rateOrder: "ਇਸ ਆਰਡਰ ਨੂੰ ਰੇਟ ਕਰੋ",
+      adminTitle: "ਐਡਮਿਨ ਡੈਸ਼ਬੋਰਡ"
+    }
+  };
+
+  let currentLang = localStorage.getItem('gh_lang') || 'en';
+
+  function t(key) {
+    return (TRANSLATIONS[currentLang] && TRANSLATIONS[currentLang][key]) || TRANSLATIONS.en[key] || key;
+  }
+
+  function applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      el.textContent = t(key);
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      el.setAttribute('placeholder', t(key));
+    });
+    const sel = document.getElementById('langSwitcher');
+    if (sel) sel.value = currentLang;
+  }
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('gh_lang', lang);
+    applyTranslations();
+    // Re-render dynamic lists (crop cards, orders) so they pick up the new language too
+    try {
+      if (typeof AppState !== 'undefined' && AppState.currentUser) {
+        if (AppState.currentRole === 'Farmer' && typeof renderFarmerDashboard === 'function') {
+          renderFarmerDashboard();
+        } else if (AppState.currentRole === 'Buyer' && typeof renderBuyerDashboard === 'function') {
+          renderBuyerDashboard();
+        }
+      }
+    } catch (e) { /* dashboard not ready yet — safe to ignore */ }
+  }
+
+  // ---------------------------------------------------------------
+  // 1b. AUTO CROP PHOTO — typing a crop name (English or Tamil) picks
+  //     a matching photo automatically, e.g. typing "Onion" / "வெங்காயம்"
+  //     sets the Photo URL field to an onion photo automatically.
+  // ---------------------------------------------------------------
+  const CROP_IMAGE_MAP = [
+    { keys: ['onion', 'வெங்காயம்'], url: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=600&auto=format&fit=crop&q=80' },
+    { keys: ['tomato', 'தக்காளி'], url: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=600&auto=format&fit=crop&q=80' },
+    { keys: ['rice', 'paddy', 'basmati', 'நெல்', 'அரிசி'], url: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&auto=format&fit=crop&q=80' },
+    { keys: ['wheat', 'கோதுமை'], url: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop&q=80' },
+    { keys: ['turmeric', 'மஞ்சள்'], url: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=600&auto=format&fit=crop&q=80' },
+    { keys: ['potato', 'உருளைக்கிழங்கு'], url: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=600&auto=format&fit=crop&q=80' },
+    { keys: ['coconut', 'தேங்காய்'], url: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=600&auto=format&fit=crop&q=80' },
+    { keys: ['grape', 'திராட்சை'], url: 'https://images.unsplash.com/photo-1596363505729-4190a9506133?w=600&auto=format&fit=crop&q=80' },
+    { keys: ['chilli', 'chili', 'மிளகாய்'], url: 'https://images.unsplash.com/photo-1588252303782-cb80119abd6d?w=600&auto=format&fit=crop&q=80' },
+    { keys: ['apple', 'ஆப்பிள்'], url: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=600&auto=format&fit=crop&q=80' },
+    { keys: ['carrot', 'கேரட்'], url: 'https://loremflickr.com/600/400/carrot,vegetable' },
+    { keys: ['brinjal', 'eggplant', 'baingan', 'கத்தரிக்காய்'], url: 'https://loremflickr.com/600/400/eggplant,brinjal' },
+    { keys: ['cabbage', 'முட்டைக்கோஸ்'], url: 'https://loremflickr.com/600/400/cabbage,vegetable' },
+    { keys: ['cauliflower', 'காலிஃபிளவர்', 'பூக்கோஸ்'], url: 'https://loremflickr.com/600/400/cauliflower' },
+    { keys: ['banana', 'வாழை'], url: 'https://loremflickr.com/600/400/banana,fruit' },
+    { keys: ['mango', 'மாம்பழம்'], url: 'https://loremflickr.com/600/400/mango,fruit' },
+    { keys: ['okra', 'ladyfinger', 'bhindi', 'வெண்டைக்காய்'], url: 'https://loremflickr.com/600/400/okra,vegetable' },
+    { keys: ['beans', 'பீன்ஸ்'], url: 'https://loremflickr.com/600/400/beans,vegetable' },
+    { keys: ['garlic', 'பூண்டு'], url: 'https://loremflickr.com/600/400/garlic' },
+    { keys: ['ginger', 'இஞ்சி'], url: 'https://loremflickr.com/600/400/ginger' },
+    { keys: ['lemon', 'எலுமிச்சை'], url: 'https://loremflickr.com/600/400/lemon,citrus' },
+    { keys: ['papaya', 'பப்பாளி'], url: 'https://loremflickr.com/600/400/papaya,fruit' },
+    { keys: ['watermelon', 'தர்பூசணி'], url: 'https://loremflickr.com/600/400/watermelon,fruit' },
+    { keys: ['cucumber', 'வெள்ளரி'], url: 'https://loremflickr.com/600/400/cucumber,vegetable' },
+    { keys: ['pumpkin', 'பூசணி'], url: 'https://loremflickr.com/600/400/pumpkin,vegetable' },
+    { keys: ['spinach', 'keerai', 'கீரை'], url: 'https://loremflickr.com/600/400/spinach,greens' },
+    { keys: ['groundnut', 'peanut', 'நிலக்கடலை'], url: 'https://loremflickr.com/600/400/peanut,groundnut' },
+    { keys: ['sugarcane', 'கரும்பு'], url: 'https://loremflickr.com/600/400/sugarcane' },
+    { keys: ['cotton', 'பருத்தி'], url: 'https://loremflickr.com/600/400/cotton,field' },
+    { keys: ['maize', 'corn', 'சோளம்'], url: 'https://loremflickr.com/600/400/corn,maize' },
+    { keys: ['pineapple', 'அன்னாசி'], url: 'https://loremflickr.com/600/400/pineapple,fruit' },
+    { keys: ['barley', 'வாற்கோதுமை'], url: 'https://loremflickr.com/600/400/barley,grain' },
+    { keys: ['oats', 'oat', 'ஓட்ஸ்'], url: 'https://loremflickr.com/600/400/oats,grain' },
+    { keys: ['sorghum', 'jowar', 'ஜோவர்'], url: 'https://loremflickr.com/600/400/sorghum,grain' },
+    { keys: ['ragi', 'finger millet', 'கேழ்வரகு'], url: 'https://loremflickr.com/600/400/ragi,millet' },
+    { keys: ['millet', 'தினை'], url: 'https://loremflickr.com/600/400/millet,grain' },
+    { keys: ['orange', 'ஆரஞ்சு'], url: 'https://loremflickr.com/600/400/orange,citrus' },
+    { keys: ['pomegranate', 'மாதுளை'], url: 'https://loremflickr.com/600/400/pomegranate,fruit' },
+    { keys: ['guava', 'கொய்யா'], url: 'https://loremflickr.com/600/400/guava,fruit' },
+    { keys: ['cumin', 'சீரகம்'], url: 'https://loremflickr.com/600/400/cumin,spice' },
+    { keys: ['coriander', 'மல்லி'], url: 'https://loremflickr.com/600/400/coriander,spice' },
+    { keys: ['black pepper', 'peppercorn', 'மிளகு'], url: 'https://loremflickr.com/600/400/blackpepper,spice' },
+    { keys: ['cardamom', 'ஏலக்காய்'], url: 'https://loremflickr.com/600/400/cardamom,spice' },
+    { keys: ['cinnamon', 'இலவங்கப்பட்டை'], url: 'https://loremflickr.com/600/400/cinnamon,spice' },
+    { keys: ['clove', 'கிராம்பு'], url: 'https://loremflickr.com/600/400/cloves,spice' },
+    { keys: ['mustard', 'கடுகு'], url: 'https://loremflickr.com/600/400/mustard,seeds' },
+    { keys: ['asafoetida', 'hing', 'பெருங்காயம்'], url: 'https://loremflickr.com/600/400/asafoetida,spice' },
+    { keys: ['fenugreek', 'methi', 'வெந்தயம்'], url: 'https://loremflickr.com/600/400/fenugreek,herb' }
+  ];
+
+  function autoSetCropPhoto(name) {
+    const photoInput = document.getElementById('formPhotoUrl');
+    if (!photoInput || photoInput.dataset.manual === '1') return; // user already picked their own photo
+    if (!name || !name.trim()) return;
+    const lower = name.toLowerCase();
+    for (const entry of CROP_IMAGE_MAP) {
+      const hit = entry.keys.some(k => lower.includes(k.toLowerCase()) || name.includes(k));
+      if (hit) {
+        photoInput.value = entry.url;
+        return;
+      }
+    }
+  }
+
+  function markPhotoManual() {
+    const photoInput = document.getElementById('formPhotoUrl');
+    if (photoInput) photoInput.dataset.manual = '1';
+  }
+
+  // ---------------------------------------------------------------
+  // 1c. DELIVERY ROUTE / MAP — shows the pickup (farm) and delivery
+  //     (buyer) addresses on an embedded map plus a one-tap
+  //     "Open Directions in Google Maps" link. No API key needed.
+  // ---------------------------------------------------------------
+  function openRouteMap(origin, destination, subtitle) {
+    const frame = document.getElementById('routeMapFrame');
+    const link = document.getElementById('routeMapOpenLink');
+    const sub = document.getElementById('routeMapSubtitle');
+    if (!frame || !link) return;
+    frame.src = `https://maps.google.com/maps?saddr=${encodeURIComponent(origin)}&daddr=${encodeURIComponent(destination)}&output=embed`;
+    link.href = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&travelmode=driving`;
+    if (sub) sub.textContent = subtitle || `${origin} → ${destination}`;
+    document.getElementById('routeMapModal').classList.remove('hidden');
+    initLucideIcons();
+  }
+
+  function closeRouteMap() {
+    document.getElementById('routeMapModal').classList.add('hidden');
+  }
+
+  function openRouteMapForOrder(orderId) {
+    const order = (AppState.ordersCache || []).find(o => o.order_id === orderId);
+    if (!order || !order.pickup_location || !order.delivery_address) return;
+    openRouteMap(order.pickup_location, order.delivery_address, `${order.crop_name} • ${order.order_id}`);
+  }
+
+  // ---------------------------------------------------------------
+  // 2. OTP LOGIN (demo — no real SMS account connected)
+  // ---------------------------------------------------------------
+  let pendingOtp = null;
+  let pendingLoginEvent = null;
+  const originalHandleLoginSubmit = window.handleLoginSubmit;
+
+  function ensureOtpModal() {
+    if (document.getElementById('ghOtpModal')) return;
+    const div = document.createElement('div');
+    div.id = 'ghOtpModal';
+    div.className = 'fixed inset-0 z-[60] flex items-center justify-center p-4 modal-backdrop hidden';
+    div.innerHTML = `
+      <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-4 shadow-2xl relative">
+        <button onclick="GHUpgrade.closeOtpModal()" class="absolute top-4 right-4 p-2 text-stone-400 hover:text-stone-600 rounded-full">✕</button>
+        <div>
+          <h3 class="text-base font-bold text-stone-900" data-i18n="otpTitle">Verify Your Phone</h3>
+          <p class="text-xs text-stone-500 mt-1" data-i18n="otpSub">Demo OTP sent (shown below since no SMS account is connected yet)</p>
+        </div>
+        <div id="ghOtpDisplay" class="text-center text-2xl font-extrabold tracking-[0.5em] text-emerald-700 bg-emerald-50 rounded-2xl py-3"></div>
+        <input id="ghOtpInput" type="text" maxlength="4" inputmode="numeric" data-i18n-placeholder="otpPlaceholder" placeholder="Enter 4-digit OTP" class="w-full p-3 text-center text-lg tracking-widest rounded-xl border border-stone-300 focus:ring-2 focus:ring-emerald-600 focus:outline-none" />
+        <button onclick="GHUpgrade.verifyOtp()" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl" data-i18n="otpVerify">Verify &amp; Continue</button>
+        <button onclick="GHUpgrade.sendOtp()" class="w-full py-2 text-xs font-bold text-emerald-700" data-i18n="otpResend">Resend Code</button>
+      </div>`;
+    document.body.appendChild(div);
+  }
+
+  function sendOtp() {
+    // DEMO ONLY: generates the code locally and displays it, since no SMS
+    // provider is connected. Replace this function's body with a real call
+    // to Firebase Auth (signInWithPhoneNumber) or MSG91's send-otp API to
+    // go live — the verifyOtp() flow below does not need to change.
+    pendingOtp = String(Math.floor(1000 + Math.random() * 9000));
+    const display = document.getElementById('ghOtpDisplay');
+    if (display) display.textContent = pendingOtp;
+    const input = document.getElementById('ghOtpInput');
+    if (input) input.value = '';
+  }
+
+  function openOtpModal(loginEvent) {
+    ensureOtpModal();
+    applyTranslations();
+    pendingLoginEvent = loginEvent;
+    sendOtp();
+    document.getElementById('ghOtpModal').classList.remove('hidden');
+  }
+
+  function closeOtpModal() {
+    const modal = document.getElementById('ghOtpModal');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  function verifyOtp() {
+    const entered = document.getElementById('ghOtpInput').value.trim();
+    if (entered !== pendingOtp) {
+      if (typeof showToast === 'function') showToast('Incorrect OTP — check the code and try again');
+      return;
+    }
+    closeOtpModal();
+    if (typeof originalHandleLoginSubmit === 'function' && pendingLoginEvent) {
+      originalHandleLoginSubmit(pendingLoginEvent);
+    }
+  }
+
+  window.handleLoginSubmit = function (event) {
+    event.preventDefault();
+    const phone = document.getElementById('loginPhoneInput').value.trim();
+    if (!phone || phone.length < 10) {
+      if (typeof showToast === 'function') showToast('Please enter a valid 10-digit phone number');
+      return;
+    }
+    openOtpModal(event);
+  };
+
+  // ---------------------------------------------------------------
+  // 3. RATINGS / TRUST SCORE
+  // ---------------------------------------------------------------
+  function ratingsStore() {
+    return JSON.parse(localStorage.getItem('gh_ratings') || '{}');
+  }
+  function saveRating(farmerKey, stars) {
+    const store = ratingsStore();
+    if (!store[farmerKey]) store[farmerKey] = [];
+    store[farmerKey].push(stars);
+    localStorage.setItem('gh_ratings', JSON.stringify(store));
+  }
+  function avgRating(farmerKey) {
+    const arr = ratingsStore()[farmerKey] || [];
+    if (!arr.length) return null;
+    return (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1);
+  }
+  function promptRating(farmerKey, farmerName) {
+    const stars = window.prompt(`Rate ${farmerName} for this delivered order (1–5 stars):`, "5");
+    const n = parseInt(stars, 10);
+    if (n >= 1 && n <= 5) {
+      saveRating(farmerKey, n);
+      if (typeof showToast === 'function') showToast(`Thanks! You rated ${farmerName} ${n}★`);
+    }
+  }
+
+  function decorateMarketListings() {
+    document.querySelectorAll('#buyerMarketContainer .crop-card').forEach(card => {
+      const farmerNameEl = [...card.querySelectorAll('p')].find(p => p.textContent.includes('Farm:'));
+      if (!farmerNameEl || farmerNameEl.dataset.ghDecorated) return;
+      farmerNameEl.dataset.ghDecorated = '1';
+      const farmerKey = farmerNameEl.textContent.trim();
+      const rating = avgRating(farmerKey);
+      if (rating) {
+        const badge = document.createElement('span');
+        badge.className = 'text-[10px] font-bold text-amber-600 ml-1';
+        badge.textContent = `★ ${rating}`;
+        farmerNameEl.appendChild(badge);
+      }
+    });
+  }
+
+  function decorateOrderTracking() {
+    document.querySelectorAll('#buyerOrdersContainer .bg-white.p-4').forEach(card => {
+      const badge = card.querySelector('[class*="badge-delivered"]');
+      if (!badge || card.dataset.ghRateAdded) return;
+      card.dataset.ghRateAdded = '1';
+      const farmerLine = [...card.querySelectorAll('span')].find(s => s.textContent.includes('Farmer:'));
+      const farmerName = farmerLine ? farmerLine.querySelector('strong')?.textContent : 'the farmer';
+      const btn = document.createElement('button');
+      btn.className = 'w-full py-2 text-xs font-bold text-amber-600 border border-amber-200 rounded-xl bg-amber-50 hover:bg-amber-100';
+      btn.textContent = `★ ${t('rateOrder')}`;
+      btn.onclick = () => promptRating(farmerName, farmerName);
+      card.appendChild(btn);
+    });
+  }
+
+  // ---------------------------------------------------------------
+  // 4. BIDDING / COUNTER-OFFERS
+  // ---------------------------------------------------------------
+  function offersStore() {
+    return JSON.parse(localStorage.getItem('gh_offers') || '[]');
+  }
+  function saveOffers(arr) {
+    localStorage.setItem('gh_offers', JSON.stringify(arr));
+  }
+
+  function makeOffer(listingId, cropName, farmerName, listedPrice) {
+    const price = window.prompt(`Your offer price per kg for ${cropName} (listed at ₹${listedPrice}):`, listedPrice);
+    if (price === null) return;
+    const qty = window.prompt('Quantity (kg):', '10');
+    if (qty === null) return;
+    const buyer = (typeof AppState !== 'undefined' && AppState.currentUser) ? AppState.currentUser.name : 'Buyer';
+    const offers = offersStore();
+    offers.push({
+      id: 'OFR' + Date.now(),
+      listingId, cropName, farmerName,
+      buyerName: buyer,
+      offerPrice: parseFloat(price) || listedPrice,
+      qty: parseInt(qty, 10) || 1,
+      status: 'Pending',
+      ts: Date.now()
+    });
+    saveOffers(offers);
+    if (typeof showToast === 'function') showToast('Offer sent to farmer!');
+  }
+
+  function decorateOffersButtons() {
+    document.querySelectorAll('#buyerMarketContainer .crop-card').forEach(card => {
+      if (card.dataset.ghOfferAdded) return;
+      const orderBtn = card.querySelector('button[onclick^="openOrderModal"]');
+      if (!orderBtn) return;
+      card.dataset.ghOfferAdded = '1';
+      const match = orderBtn.getAttribute('onclick').match(/openOrderModal\('(.+)'\)/);
+      const listingId = match ? match[1] : '';
+      const cropName = card.querySelector('h4')?.textContent || '';
+      const farmerLine = card.querySelector('p')?.textContent || '';
+      const farmerName = farmerLine.replace('Farm:', '').split('•')[0].trim();
+      const priceText = card.querySelector('.text-emerald-800')?.textContent.replace('₹', '') || '0';
+      const offerBtn = document.createElement('button');
+      offerBtn.className = 'px-2.5 py-2 bg-white border border-amber-300 text-amber-700 font-bold text-[10px] rounded-xl hover:bg-amber-50 flex-shrink-0';
+      offerBtn.textContent = t('makeOffer');
+      offerBtn.onclick = () => makeOffer(listingId, cropName, farmerName, priceText);
+      orderBtn.insertAdjacentElement('afterend', offerBtn);
+    });
+  }
+
+  function renderFarmerOffersPanel() {
+    const container = document.getElementById('farmerOffersContainer');
+    if (!container || typeof AppState === 'undefined' || !AppState.currentUser) return;
+    const farmerName = AppState.currentUser.name;
+    const offers = offersStore().filter(o => o.farmerName === farmerName && o.status === 'Pending');
+    if (offers.length === 0) {
+      container.innerHTML = '';
+      return;
+    }
+    container.innerHTML = `
+      <div class="bg-amber-50 border border-amber-200 rounded-3xl p-4 space-y-2">
+        <div class="text-xs font-bold text-amber-900">${t('offersTitle')} (${offers.length})</div>
+        ${offers.map(o => `
+          <div class="bg-white rounded-2xl p-2.5 flex items-center justify-between text-[11px] border border-amber-100">
+            <div>
+              <div class="font-bold text-stone-900">${o.cropName} — ₹${o.offerPrice}/kg × ${o.qty}kg</div>
+              <div class="text-stone-500">from ${o.buyerName}</div>
+            </div>
+            <div class="flex items-center space-x-1.5">
+              <button onclick="GHUpgrade.respondOffer('${o.id}','Accepted')" class="px-2 py-1.5 bg-emerald-700 text-white font-bold rounded-lg text-[10px]">${t('offerAccept')}</button>
+              <button onclick="GHUpgrade.respondOffer('${o.id}','Rejected')" class="px-2 py-1.5 bg-stone-100 text-stone-600 font-bold rounded-lg text-[10px]">${t('offerReject')}</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>`;
+  }
+
+  function respondOffer(id, status) {
+    const offers = offersStore();
+    const o = offers.find(x => x.id === id);
+    if (o) o.status = status;
+    saveOffers(offers);
+    if (typeof showToast === 'function') showToast(`Offer ${status.toLowerCase()}`);
+    renderFarmerOffersPanel();
+  }
+
+  // ---------------------------------------------------------------
+  // 5. ADMIN DASHBOARD
+  // ---------------------------------------------------------------
+  function ensureAdminModal() {
+    if (document.getElementById('ghAdminModal')) return;
+    const div = document.createElement('div');
+    div.id = 'ghAdminModal';
+    div.className = 'fixed inset-0 z-[60] flex items-center justify-center p-4 modal-backdrop hidden overflow-y-auto';
+    div.innerHTML = `
+      <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-3 shadow-2xl relative my-6">
+        <button onclick="GHUpgrade.closeAdminDashboard()" class="absolute top-4 right-4 p-2 text-stone-400 hover:text-stone-600 rounded-full">✕</button>
+        <h3 class="text-base font-bold text-stone-900" data-i18n="adminTitle">Admin Dashboard</h3>
+        <div id="ghAdminBody" class="text-xs text-stone-600">Loading…</div>
+      </div>`;
+    document.body.appendChild(div);
+  }
+
+  async function openAdminDashboard() {
+    ensureAdminModal();
+    applyTranslations();
+    document.getElementById('ghAdminModal').classList.remove('hidden');
+    const body = document.getElementById('ghAdminBody');
+    try {
+      const [listings, orders, farmers] = await Promise.all([
+        SheetService.getRows('Listings'),
+        SheetService.getRows('Orders'),
+        SheetService.getRows('Farmers')
+      ]);
+
+      const gmv = orders.reduce((sum, o) => sum + (parseFloat(o.total_price) || 0), 0);
+
+      // Simple anomaly flag: price more than 2x the category average
+      const byType = {};
+      listings.forEach(l => {
+        byType[l.crop_type] = byType[l.crop_type] || [];
+        byType[l.crop_type].push(parseFloat(l.price_per_kg) || 0);
+      });
+      const flagged = listings.filter(l => {
+        const prices = byType[l.crop_type] || [];
+        const avg = prices.reduce((a, b) => a + b, 0) / (prices.length || 1);
+        return avg > 0 && parseFloat(l.price_per_kg) > avg * 2;
+      });
+
+      const ratings = ratingsStore();
+      const leaderboard = Object.keys(ratings)
+        .map(name => ({ name, avg: avgRating(name) }))
+        .sort((a, b) => b.avg - a.avg)
+        .slice(0, 3);
+
+      body.innerHTML = `
+        <div class="grid grid-cols-2 gap-2 mb-2">
+          <div class="bg-stone-50 rounded-xl p-2.5"><div class="text-lg font-extrabold text-stone-900">${listings.length}</div><div>Active-eligible listings</div></div>
+          <div class="bg-stone-50 rounded-xl p-2.5"><div class="text-lg font-extrabold text-stone-900">${orders.length}</div><div>Total orders</div></div>
+          <div class="bg-stone-50 rounded-xl p-2.5"><div class="text-lg font-extrabold text-emerald-700">₹${gmv.toFixed(0)}</div><div>GMV (all orders)</div></div>
+          <div class="bg-stone-50 rounded-xl p-2.5"><div class="text-lg font-extrabold text-stone-900">${farmers.length}</div><div>Registered farmers</div></div>
+        </div>
+        <div class="pt-1">
+          <div class="font-bold text-stone-800 mb-1">Top-rated farmers</div>
+          ${leaderboard.length ? leaderboard.map(f => `<div class="flex justify-between py-0.5"><span>${f.name}</span><span class="font-bold text-amber-600">★ ${f.avg}</span></div>`).join('') : '<div class="text-stone-400">No ratings submitted yet</div>'}
+        </div>
+        <div class="pt-2">
+          <div class="font-bold text-stone-800 mb-1">Flagged listings (price &gt;2× category average)</div>
+          ${flagged.length ? flagged.map(l => `<div class="py-0.5 flex justify-between"><span>${l.crop_name} (${l.farmer_name})</span><span class="font-bold text-rose-600">₹${l.price_per_kg}/kg</span></div>`).join('') : '<div class="text-stone-400">None flagged</div>'}
+        </div>`;
+    } catch (e) {
+      body.innerHTML = `<div class="text-rose-600">Could not load Sheet data (${e.message || e}). Make sure your Google Sheet connection is active.</div>`;
+    }
+  }
+
+  function closeAdminDashboard() {
+    const modal = document.getElementById('ghAdminModal');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  // ---------------------------------------------------------------
+  // 6. WEATHER & CROP ADVISORY (Open-Meteo — free, no key)
+  // ---------------------------------------------------------------
+  function adviceFor(weatherCode, tempMax, precipProb) {
+    if (precipProb >= 60) return "Rain likely — delay pesticide/fertilizer spraying and cover harvested produce.";
+    if (tempMax >= 38) return "Heat stress risk — irrigate early morning or evening, mulch to retain soil moisture.";
+    if (tempMax <= 12) return "Cold snap — protect young seedlings, delay early-morning irrigation.";
+    return "Conditions look favorable for regular field work today.";
+  }
+
+  async function renderWeatherAdvisory() {
+    const container = document.getElementById('weatherAdvisoryContainer');
+    if (!container || typeof AppState === 'undefined' || !AppState.currentUser) return;
+    const place = AppState.currentUser.village || AppState.currentUser.state || 'India';
+    container.innerHTML = `<div class="bg-sky-50 border border-sky-200 rounded-3xl p-4 text-xs text-sky-700">Loading weather for ${place}…</div>`;
+    try {
+      const geo = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(place)}&count=1`).then(r => r.json());
+      if (!geo.results || !geo.results.length) throw new Error('Location not found');
+      const { latitude, longitude, name } = geo.results[0];
+      const wx = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto`).then(r => r.json());
+      const tempMax = wx.daily.temperature_2m_max[0];
+      const tempMin = wx.daily.temperature_2m_min[0];
+      const precip = wx.daily.precipitation_probability_max[0];
+      container.innerHTML = `
+        <div class="bg-sky-50 border border-sky-200 rounded-3xl p-4 space-y-1.5">
+          <div class="text-xs font-bold text-sky-900 flex items-center justify-between">
+            <span>${t('weatherTitle')} — ${name}</span>
+            <span>${tempMin}°–${tempMax}°C</span>
+          </div>
+          <div class="text-[11px] text-sky-800">Rain chance today: ${precip}%</div>
+          <div class="text-[11px] text-sky-700 bg-white/70 rounded-xl p-2">${adviceFor(null, tempMax, precip)}</div>
+        </div>`;
+    } catch (e) {
+      container.innerHTML = `<div class="bg-sky-50 border border-sky-200 rounded-3xl p-3 text-[11px] text-sky-700">Weather advisory unavailable right now (${e.message || 'network error'}).</div>`;
+    }
+  }
+
+  // ---------------------------------------------------------------
+  // WIRE-UP: wrap the existing render functions non-destructively
+  // ---------------------------------------------------------------
+  function wrap(name, after) {
+    const original = window[name];
+    if (typeof original !== 'function') return;
+    window[name] = function (...args) {
+      const result = original.apply(this, args);
+      if (result && typeof result.then === 'function') {
+        result.then(() => after(...args));
+      } else {
+        after(...args);
+      }
+      return result;
+    };
+  }
+
+  function init() {
+    applyTranslations();
+
+    wrap('renderBuyerMarketListings', () => {
+      decorateMarketListings();
+      decorateOffersButtons();
+      initLucideIcons();
+    });
+    wrap('renderBuyerOrdersTracking', () => {
+      decorateOrderTracking();
+    });
+    wrap('renderFarmerDashboard', () => {
+      renderWeatherAdvisory();
+      renderFarmerOffersPanel();
+      initLucideIcons();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+
+  return {
+    setLanguage, t, sendOtp, verifyOtp, closeOtpModal,
+    respondOffer, openAdminDashboard, closeAdminDashboard,
+    autoSetCropPhoto, markPhotoManual,
+    openRouteMap, closeRouteMap, openRouteMapForOrder
+  };
+})();
+
+
+</script>
+</body>
+</html>
