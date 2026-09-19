@@ -725,26 +725,26 @@ const INITIAL_SHEET_DATA = {
     {
       listing_id: "L01",
       farmer_id: "F01",
-      farmer_name: "xxxxxx",
-      crop_name: "xxxxxxxx",
+      farmer_name: "Rameshwar Patil",
+      crop_name: "Fresh Nashik Red Onions",
       crop_type: "Vegetables",
       qty_kg: 1800,
       price_per_kg: 24,
       harvest_date: "2026-09-08",
-      location: "xxxxxx",
+      location: "Nashik, Maharashtra",
       photo_url: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=600&auto=format&fit=crop&q=80",
       status: "active"
     },
     {
       listing_id: "L02",
       farmer_id: "F01",
-      farmer_name: "xxxx",
+      farmer_name: "Rameshwar Patil",
       crop_name: "Vine-Ripened Hybrid Tomatoes",
       crop_type: "Vegetables",
       qty_kg: 950,
       price_per_kg: 28,
       harvest_date: "2026-09-12",
-      location: "xxxxxx",
+      location: "Nashik, Maharashtra",
       photo_url: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=600&auto=format&fit=crop&q=80",
       status: "active"
     },
@@ -1344,7 +1344,7 @@ const SheetService = {
 /**
  * Green Hand - Main Application Logic (Full Online Edition)
  * Role State Machine, Google Sheet live synchronization, Farmer & Buyer flows
- * Configured for: sivasamiaravinth@gmail.com
+ * Configured for: pravinjothi55@gmail.com
  */
 
 const AppState = {
@@ -2375,8 +2375,8 @@ const GHUpgrade = (() => {
       nameLabel: "Your Full Name",
       enterMarketplace: "Enter Marketplace",
       otpTitle: "Verify Your Phone",
-      otpSub:"A verification code has been sent to your mobile number.",
-      otpPlaceholder: "Enter 6-digit OTP",
+      otpSub: "Demo OTP sent (shown below since no SMS account is connected yet)",
+      otpPlaceholder: "Enter 4-digit OTP",
       otpVerify: "Verify & Continue",
       otpResend: "Resend Code",
       weatherTitle: "Weather & Crop Advisory",
@@ -3133,28 +3133,5 @@ const GHUpgrade = (() => {
 
 
 </script>
-<head>
-  <script src="https://www.google.com/recaptcha/enterprise.js?render=6LdUUsQtAAAAAA7QdlAuqLGjkBZDYTHTIwD_Wa5d"></script>
-  <!-- Your code -->
-</head>
-<!-- Replace the variables below. -->
-<script>
-  function onSubmit(token) {
-    document.getElementById("demo-form").submit();
-  }
- <button class="g-recaptcha"
-    data-sitekey="6LdUUsQtAAAAAA7QdlAuqLGjkBZDYTHTIwD_Wa5d"
-    data-callback='onSubmit'
-    data-action='submit'>
-  Submit
-</button>
-</script>
-  {
-  "event": {
-    "token": "TOKEN",
-    "expectedAction": "USER_ACTION",
-    "siteKey": "6LdUUsQtAAAAAA7QdlAuqLGjkBZDYTHTIwD_Wa5d",
-  }
-}
 </body>
 </html>
