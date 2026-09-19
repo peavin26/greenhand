@@ -725,26 +725,26 @@ const INITIAL_SHEET_DATA = {
     {
       listing_id: "L01",
       farmer_id: "F01",
-      farmer_name: "Rameshwar Patil",
-      crop_name: "Fresh Nashik Red Onions",
+      farmer_name: "xxxxxx",
+      crop_name: "xxxxxxxx",
       crop_type: "Vegetables",
       qty_kg: 1800,
       price_per_kg: 24,
       harvest_date: "2026-09-08",
-      location: "Nashik, Maharashtra",
+      location: "xxxxxx",
       photo_url: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=600&auto=format&fit=crop&q=80",
       status: "active"
     },
     {
       listing_id: "L02",
       farmer_id: "F01",
-      farmer_name: "Rameshwar Patil",
+      farmer_name: "xxxx",
       crop_name: "Vine-Ripened Hybrid Tomatoes",
       crop_type: "Vegetables",
       qty_kg: 950,
       price_per_kg: 28,
       harvest_date: "2026-09-12",
-      location: "Nashik, Maharashtra",
+      location: "xxxxxx",
       photo_url: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=600&auto=format&fit=crop&q=80",
       status: "active"
     },
@@ -1344,7 +1344,7 @@ const SheetService = {
 /**
  * Green Hand - Main Application Logic (Full Online Edition)
  * Role State Machine, Google Sheet live synchronization, Farmer & Buyer flows
- * Configured for: pravinjothi55@gmail.com
+ * Configured for: sivasamiaravinth@gmail.com
  */
 
 const AppState = {
@@ -2375,8 +2375,8 @@ const GHUpgrade = (() => {
       nameLabel: "Your Full Name",
       enterMarketplace: "Enter Marketplace",
       otpTitle: "Verify Your Phone",
-      otpSub: "Demo OTP sent (shown below since no SMS account is connected yet)",
-      otpPlaceholder: "Enter 4-digit OTP",
+      otpSub:"A verification code has been sent to your mobile number.",
+      otpPlaceholder: "Enter 6-digit OTP",
       otpVerify: "Verify & Continue",
       otpResend: "Resend Code",
       weatherTitle: "Weather & Crop Advisory",
@@ -3133,5 +3133,21 @@ const GHUpgrade = (() => {
 
 
 </script>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  var firebaseConfig = {
+  apiKey: "API_KEY",
+  authDomain: "PROJECT_ID.firebaseapp.com",
+  // The value of `databaseURL` depends on the location of the database
+  databaseURL: "https://DATABASE_NAME.firebaseio.com",
+  projectId: "PROJECT_ID",
+  // The value of `storageBucket` depends on when you provisioned your default bucket (learn more)
+  storageBucket: "PROJECT_ID.firebasestorage.app",
+  messagingSenderId: "SENDER_ID",
+  appId: "APP_ID",
+  // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
+  measurementId: "G-MEASUREMENT_ID",
+};
 </body>
 </html>
